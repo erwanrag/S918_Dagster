@@ -1,9 +1,9 @@
-
 """
 ============================================================================
 Assets Services - Devises + Dimension temporelle
 ============================================================================
 """
+
 from dagster import AssetExecutionContext, asset
 
 from src.core.services.currencies import load_currency_codes, load_exchange_rates

@@ -1,9 +1,9 @@
-
 """
 ============================================================================
 Definitions - Point d'entrée Dagster
 ============================================================================
 """
+
 from dagster import Definitions, load_assets_from_modules
 
 from src.assets import ingestion, ods, services

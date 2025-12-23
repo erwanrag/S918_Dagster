@@ -3,6 +3,7 @@
 Monitoring - Logs dans sftp_monitoring
 ============================================================================
 """
+
 from pathlib import Path
 
 from src.config.constants import ProcessingStatus, Schema
@@ -19,13 +20,14 @@ def log_sftp_file(
 ) -> int:
     """
     Logger un fichier SFTP dans sftp_monitoring.sftp_file_log
-    
+
     Returns:
         log_id du fichier inséré
     """
     with get_connection() as conn:
         with conn.cursor() as cur:
-            cur.execute(f"""
+            cur.execute(
+                f"""
                 INSERT INTO {Schema.SFTP_MONITORING.value}.sftp_file_log (
                     file_name,
                     file_path,
@@ -37,15 +39,17 @@ def log_sftp_file(
                 )
                 VALUES (%s, %s, %s, %s, %s, %s, CURRENT_TIMESTAMP)
                 RETURNING log_id
-            """, (
-                file_path.name,
-                str(file_path),
-                table_name,
-                load_mode,
-                file_path.stat().st_size,
-                ProcessingStatus.PENDING.value,
-            ))
-            
+            """,
+                (
+                    file_path.name,
+                    str(file_path),
+                    table_name,
+                    load_mode,
+                    file_path.stat().st_size,
+                    ProcessingStatus.PENDING.value,
+                ),
+            )
+
             log_id = cur.fetchone()[0]
             logger.info("SFTP file logged", log_id=log_id, file=file_path.name)
             return log_id
@@ -60,7 +64,8 @@ def update_sftp_file_status(
     """Mettre à jour le statut d'un fichier SFTP"""
     with get_connection() as conn:
         with conn.cursor() as cur:
-            cur.execute(f"""
+            cur.execute(
+                f"""
                 UPDATE {Schema.SFTP_MONITORING.value}.sftp_file_log
                 SET 
                     processing_status = %s,
@@ -71,12 +76,14 @@ def update_sftp_file_status(
                                         ELSE processed_at 
                                    END
                 WHERE log_id = %s
-            """, (
-                status.value,
-                row_count,
-                error_message,
-                status.value,
-                log_id,
-            ))
-            
+            """,
+                (
+                    status.value,
+                    row_count,
+                    error_message,
+                    status.value,
+                    log_id,
+                ),
+            )
+
             logger.info("SFTP file status updated", log_id=log_id, status=status.value)

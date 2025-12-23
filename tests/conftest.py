@@ -1,8 +1,8 @@
 """
 Fixtures pytest communes
 """
+
 import pytest
-from unittest.mock import Mock
 from pathlib import Path
 
 
@@ -10,6 +10,7 @@ from pathlib import Path
 def mock_settings():
     """Mock des settings"""
     from unittest.mock import MagicMock
+
     settings = MagicMock()
     settings.pg_host = "localhost"
     settings.pg_port = 5432

@@ -3,10 +3,10 @@
 Database Connection - Gestion pool connexions PostgreSQL
 ============================================================================
 """
+
 from contextlib import contextmanager
 from typing import Generator
 
-import psycopg2
 from psycopg2 import pool
 from psycopg2.extensions import connection
 
@@ -22,7 +22,7 @@ _connection_pool: pool.SimpleConnectionPool | None = None
 def get_connection_pool() -> pool.SimpleConnectionPool:
     """Obtenir le pool de connexions (singleton)"""
     global _connection_pool
-    
+
     if _connection_pool is None:
         settings = get_settings()
         _connection_pool = pool.SimpleConnectionPool(
@@ -31,7 +31,7 @@ def get_connection_pool() -> pool.SimpleConnectionPool:
             dsn=settings.postgres_url,
         )
         logger.info("Connection pool created", min=1, max=10)
-    
+
     return _connection_pool
 
 
@@ -40,7 +40,7 @@ def get_connection() -> Generator[connection, None, None]:
     """Context manager pour obtenir une connexion du pool"""
     conn_pool = get_connection_pool()
     conn = conn_pool.getconn()
-    
+
     try:
         yield conn
         conn.commit()

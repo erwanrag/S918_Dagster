@@ -1,14 +1,15 @@
-
 """
 ============================================================================
 Constants - Constantes du projet
 ============================================================================
 """
+
 from enum import Enum
 
 
 class LoadMode(str, Enum):
     """Modes de chargement des données"""
+
     FULL = "FULL"
     INCREMENTAL = "INCREMENTAL"
     FULL_RESET = "FULL_RESET"
@@ -16,6 +17,7 @@ class LoadMode(str, Enum):
 
 class ProcessingStatus(str, Enum):
     """Statuts de traitement"""
+
     PENDING = "PENDING"
     IN_PROGRESS = "IN_PROGRESS"
     COMPLETED = "COMPLETED"
@@ -24,6 +26,7 @@ class ProcessingStatus(str, Enum):
 
 class Schema(str, Enum):
     """Schémas PostgreSQL"""
+
     RAW = "raw"
     STAGING = "staging_etl"
     ODS = "ods"

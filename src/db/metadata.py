@@ -1,9 +1,9 @@
-
 """
 ============================================================================
 Metadata Helper - Accès aux métadonnées des tables
 ============================================================================
 """
+
 from typing import Any
 
 from src.config.constants import Schema
@@ -16,7 +16,7 @@ logger = get_logger(__name__)
 def get_table_metadata(table_name: str) -> dict[str, Any] | None:
     """
     Récupérer les métadonnées d'une table
-    
+
     Returns:
         dict avec:
             - table_name: Nom physique
@@ -29,7 +29,8 @@ def get_table_metadata(table_name: str) -> dict[str, Any] | None:
     with get_connection() as conn:
         with conn.cursor() as cur:
             # Table principale
-            cur.execute(f"""
+            cur.execute(
+                f"""
                 SELECT 
                     "TableName",
                     "ConfigName",
@@ -41,17 +42,27 @@ def get_table_metadata(table_name: str) -> dict[str, Any] | None:
                 WHERE COALESCE("ConfigName", "TableName") = %s
                   AND "IsActive" = TRUE
                 LIMIT 1
-            """, (table_name,))
-            
+            """,
+                (table_name,),
+            )
+
             row = cur.fetchone()
             if not row:
                 logger.warning("Table metadata not found", table=table_name)
                 return None
-            
-            table_name_db, config_name, primary_keys, has_timestamps, force_full, description = row
-            
+
+            (
+                table_name_db,
+                config_name,
+                primary_keys,
+                has_timestamps,
+                force_full,
+                description,
+            ) = row
+
             # Colonnes
-            cur.execute(f"""
+            cur.execute(
+                f"""
                 SELECT 
                     "ColumnName",
                     "DataType",
@@ -62,8 +73,10 @@ def get_table_metadata(table_name: str) -> dict[str, Any] | None:
                 FROM {Schema.METADATA.value}.proginovcolumns
                 WHERE "TableName" = %s
                 ORDER BY "ProgressOrder"
-            """, (table_name_db,))
-            
+            """,
+                (table_name_db,),
+            )
+
             columns = [
                 {
                     "column_name": row[0],
@@ -75,7 +88,7 @@ def get_table_metadata(table_name: str) -> dict[str, Any] | None:
                 }
                 for row in cur.fetchall()
             ]
-            
+
             return {
                 "table_name": table_name_db,
                 "config_name": config_name,
@@ -92,13 +105,15 @@ def get_active_tables() -> list[str]:
     """Récupérer la liste des tables actives"""
     with get_connection() as conn:
         with conn.cursor() as cur:
-            cur.execute(f"""
+            cur.execute(
+                f"""
                 SELECT COALESCE("ConfigName", "TableName")
                 FROM {Schema.METADATA.value}.etl_tables
                 WHERE "IsActive" = TRUE
                 ORDER BY "TableName"
-            """)
-            
+            """
+            )
+
             tables = [row[0] for row in cur.fetchall()]
             logger.info("Active tables retrieved", count=len(tables))
             return tables
