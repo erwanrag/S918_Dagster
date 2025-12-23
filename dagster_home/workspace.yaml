@@ -1,5 +1,4 @@
 load_from:
   - python_package:
-      package_name: workspace
-      working_directory: /data/dagster
+      package_name: src
       attribute: definitions

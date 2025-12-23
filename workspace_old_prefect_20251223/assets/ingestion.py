@@ -26,8 +26,8 @@ from shared.config import config, sftp_config
 
 # Import des FONCTIONS Prefect (pas les @op, juste les fonctions)
 from ETL.tasks.staging_tasks import (
-    create_staging_table as prefect_create_staging_table,
-    load_raw_to_staging as prefect_load_raw_to_staging
+    create_staging_table_logic,
+    load_raw_to_staging_logic
 )
 
 
@@ -388,8 +388,8 @@ def staging_tables_ready(
             context.log.info(f"[MODE] {load_mode}")
             
             # Appeler fonctions Prefect directement (via .fn)
-            prefect_create_staging_table.fn(table_name, load_mode)
-            rows = prefect_load_raw_to_staging.fn(table_name, run_id, load_mode)
+            create_staging_table_logic(table_name, load_mode)
+            rows = load_raw_to_staging_logic(table_name, run_id, load_mode)
             
             total_rows += rows
             
