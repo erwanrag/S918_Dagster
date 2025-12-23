@@ -87,3 +87,7 @@ Services
 # Compiled
 *.pyc
 *.pyo
+# Dossiers temporaires
+storage/
+logs/
+scripts/
