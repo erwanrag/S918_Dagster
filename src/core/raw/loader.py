@@ -11,7 +11,6 @@ from sqlalchemy import create_engine
 
 from src.config.constants import ProcessingStatus, Schema
 from src.config.settings import get_settings
-from src.db.connection import get_connection
 from src.db.monitoring import update_sftp_file_status
 from src.utils.logging import get_logger
 
@@ -22,6 +21,7 @@ def load_parquet_to_raw(
     parquet_path: Path,
     table_name: str,
     log_id: int,
+    conn,
 ) -> int:
     """
     Charger un fichier parquet dans le schéma RAW
@@ -46,8 +46,8 @@ def load_parquet_to_raw(
         rows_count = len(df)
 
         # Créer le schéma RAW s'il n'existe pas
-        with get_connection() as conn:
-            with conn.cursor() as cur:
+
+        with conn.cursor() as cur:
                 cur.execute(f"CREATE SCHEMA IF NOT EXISTS {Schema.RAW.value}")
                 cur.execute(f"DROP TABLE IF EXISTS {raw_table} CASCADE")
 

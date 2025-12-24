@@ -15,23 +15,23 @@ logger = get_logger(__name__)
 
 @asset(name="currency_codes_loaded", group_name="services")
 def currency_codes_loaded(context: AssetExecutionContext) -> int:
-    """Charger codes devises ISO 4217"""
-    count = load_currency_codes()
+    with context.resources.postgres.get_connection() as conn:
+        count = load_currency_codes(conn)
     context.log.info(f"Currency codes loaded: {count}")
     return count
 
 
 @asset(name="exchange_rates_loaded", group_name="services")
 def exchange_rates_loaded(context: AssetExecutionContext) -> int:
-    """Charger taux de change EUR"""
-    count = load_exchange_rates()
+    with context.resources.postgres.get_connection() as conn:
+        count = load_exchange_rates(conn)
     context.log.info(f"Exchange rates loaded: {count}")
     return count
 
 
 @asset(name="time_dimension_built", group_name="services")
 def time_dimension_built(context: AssetExecutionContext) -> int:
-    """Construire dimension temporelle 2015-2035"""
-    count = build_time_dimension()
+    with context.resources.postgres.get_connection() as conn:
+        count = build_time_dimension(conn)
     context.log.info(f"Time dimension built: {count} days")
     return count

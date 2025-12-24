@@ -1,37 +1,25 @@
-"""
-============================================================================
-Time Dimension - Génération dimension temporelle 2015-2035
-============================================================================
-"""
-
 from datetime import date, timedelta
+from psycopg2 import sql
 
 from src.config.constants import Schema
-from src.db.connection import get_connection
 from src.utils.logging import get_logger
 
 logger = get_logger(__name__)
 
 
-def build_time_dimension(start_year: int = 2015, end_year: int = 2035) -> int:
-    """
-    Construire la dimension temporelle
-
-    Génère une ligne par jour entre start_year et end_year
-
-    Returns:
-        Nombre de jours créés
-    """
+def build_time_dimension(conn, start_year: int = 2015, end_year: int = 2035) -> int:
     start_date = date(start_year, 1, 1)
     end_date = date(end_year, 12, 31)
 
-    with get_connection() as conn:
-        with conn.cursor() as cur:
-            cur.execute(f"CREATE SCHEMA IF NOT EXISTS {Schema.REFERENCE.value}")
+    with conn.cursor() as cur:
+        cur.execute(
+            sql.SQL("CREATE SCHEMA IF NOT EXISTS {}")
+            .format(sql.Identifier(Schema.REFERENCE.value))
+        )
 
-            cur.execute(
-                f"""
-                CREATE TABLE IF NOT EXISTS {Schema.REFERENCE.value}.dim_time (
+        cur.execute(
+            sql.SQL("""
+                CREATE TABLE IF NOT EXISTS {}.dim_time (
                     date_key DATE PRIMARY KEY,
                     year INTEGER,
                     quarter INTEGER,
@@ -43,51 +31,40 @@ def build_time_dimension(start_year: int = 2015, end_year: int = 2035) -> int:
                     is_weekend BOOLEAN,
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )
-            """
-            )
+            """).format(sql.Identifier(Schema.REFERENCE.value))
+        )
 
-            cur.execute(f"TRUNCATE TABLE {Schema.REFERENCE.value}.dim_time")
+        cur.execute(
+            sql.SQL("TRUNCATE TABLE {}.dim_time")
+            .format(sql.Identifier(Schema.REFERENCE.value))
+        )
 
-            current_date = start_date
-            count = 0
+        current_date = start_date
+        count = 0
 
-            while current_date <= end_date:
-                day_of_week = current_date.weekday()
-                day_names = [
-                    "Lundi",
-                    "Mardi",
-                    "Mercredi",
-                    "Jeudi",
-                    "Vendredi",
-                    "Samedi",
-                    "Dimanche",
-                ]
-
-                cur.execute(
-                    f"""
-                    INSERT INTO {Schema.REFERENCE.value}.dim_time (
+        while current_date <= end_date:
+            cur.execute(
+                sql.SQL("""
+                    INSERT INTO {}.dim_time (
                         date_key, year, quarter, month, day,
                         day_of_week, day_name, week_of_year, is_weekend
                     )
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
-                """,
-                    (
-                        current_date,
-                        current_date.year,
-                        (current_date.month - 1) // 3 + 1,
-                        current_date.month,
-                        current_date.day,
-                        day_of_week + 1,
-                        day_names[day_of_week],
-                        current_date.isocalendar()[1],
-                        day_of_week >= 5,
-                    ),
-                )
-
-                current_date += timedelta(days=1)
-                count += 1
-
-            logger.info(
-                "Time dimension built", days=count, start=start_year, end=end_year
+                    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)
+                """).format(sql.Identifier(Schema.REFERENCE.value)),
+                (
+                    current_date,
+                    current_date.year,
+                    (current_date.month - 1) // 3 + 1,
+                    current_date.month,
+                    current_date.day,
+                    current_date.weekday() + 1,
+                    current_date.strftime("%A"),
+                    current_date.isocalendar()[1],
+                    current_date.weekday() >= 5,
+                ),
             )
-            return count
+            current_date += timedelta(days=1)
+            count += 1
+
+    logger.info("Time dimension built", days=count)
+    return count

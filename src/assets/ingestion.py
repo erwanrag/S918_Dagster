@@ -34,43 +34,38 @@ def sftp_discovered_files(context: AssetExecutionContext) -> list[dict]:
 
     return discovered
 
-
 @asset(name="raw_tables_loaded", group_name="ingestion")
-def raw_tables_loaded(
-    context: AssetExecutionContext,
-    sftp_discovered_files: list[dict],
-) -> dict:
-    """Charger fichiers parquet dans RAW"""
+def raw_tables_loaded(context, sftp_discovered_files):
     from pathlib import Path
 
     results = []
     total_rows = 0
 
-    for file_info in sftp_discovered_files:
-        parquet_path = Path(file_info["path"])
-        table_name = file_info["table_name"]
-        load_mode = file_info["load_mode"]
+    with context.resources.postgres.get_connection() as conn:
+        for file_info in sftp_discovered_files:
+            parquet_path = Path(file_info["path"])
+            table_name = file_info["table_name"]
+            load_mode = file_info["load_mode"]
 
-        try:
-            # Logger dans monitoring
-            log_id = log_sftp_file(parquet_path, table_name, load_mode)
+            try:
+                log_id = log_sftp_file(parquet_path, table_name, load_mode)
 
-            # Charger dans RAW
-            rows = load_parquet_to_raw(parquet_path, table_name, log_id)
-            total_rows += rows
+                rows = load_parquet_to_raw(
+                    parquet_path=parquet_path,
+                    table_name=table_name,
+                    log_id=log_id,
+                    conn=conn,
+                )
 
-            results.append({"table": table_name, "rows": rows, "mode": load_mode})
-            context.log.info(f"[OK] {table_name}: {rows:,} rows")
+                total_rows += rows
+                results.append({"table": table_name, "rows": rows, "mode": load_mode})
 
-        except Exception as e:
-            context.log.error(f"[ERROR] {table_name}: {e}")
-            continue
-
-    context.log.info(
-        f"RAW Loading Complete: {len(results)} tables, {total_rows:,} rows"
-    )
+            except Exception as e:
+                context.log.error(f"[ERROR] {table_name}: {e}")
+                continue
 
     return {"tables_loaded": len(results), "total_rows": total_rows, "results": results}
+
 
 
 @asset(name="staging_tables_ready", group_name="ingestion")
