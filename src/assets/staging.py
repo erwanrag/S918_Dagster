@@ -33,7 +33,7 @@ def staging_tables(
 
     for table_info in raw_sftp_tables["results"]:
         table_name = table_info["table"]
-        load_mode = table_info["mode"]
+        load_mode = table_info.get("mode", "FULL")  # Fallback
 
         try:
             create_staging_table(table_name, load_mode)
@@ -58,4 +58,5 @@ def staging_tables(
         "tables_processed": len(results),
         "total_rows": total_rows,
         "results": results,
+        "run_id": run_id,  # ← AJOUTER CETTE LIGNE
     }

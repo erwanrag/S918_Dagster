@@ -35,7 +35,7 @@ def raw_sftp_tables(
 
     def process_single_file(
         parquet_path: Path,
-    ) -> Tuple[str, bool, Optional[str]]:
+    ) -> Tuple[str, str, bool, Optional[str]]:
         metadata = file_metadata[parquet_path]
         table_name = metadata["table_name"]
         load_mode = metadata["load_mode"]
@@ -62,10 +62,10 @@ def raw_sftp_tables(
                 rows=rows,
                 load_mode=load_mode,
             )
-            return (table_name, True, None)
+            return (table_name, load_mode, True, None)
 
         except Exception as e:
-            return (table_name, False, str(e))
+            return (table_name, load_mode, False, str(e))
 
     results = process_files_by_size_strategy(file_paths, process_single_file)
 
@@ -73,6 +73,16 @@ def raw_sftp_tables(
         file_metadata[Path(r["file"])]["size_bytes"] // 1000
         for r in results["success"]
     )
+    
+    # Formatter les résultats avec mode
+    formatted_results = [
+        {
+            "table": r["table"],
+            "mode": file_metadata[Path(r["file"])]["load_mode"],
+            "rows": file_metadata[Path(r["file"])]["size_bytes"] // 1000,
+        }
+        for r in results["success"]
+    ]
 
     context.add_output_metadata({
         "files_total": results["total"],
@@ -85,6 +95,6 @@ def raw_sftp_tables(
     })
 
     return {
-        "results": results["success"],
+        "results": formatted_results,  # ← Utiliser formatted_results au lieu de results["success"]
         "total_rows": total_rows,
     }

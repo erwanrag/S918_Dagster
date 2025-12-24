@@ -16,16 +16,16 @@ from src.core.ods.merger import merge_staging_to_ods
     • Source unique pour dbt
     """,
 )
-def ods_tables_merged(
+def ods_tables(  # ← Renommer la fonction aussi
     context: AssetExecutionContext,
-    staging_tables_ready: dict,
+    staging_tables: dict,  # ← Changer de staging_tables_ready à staging_tables
 ) -> dict:
     results = []
     total_rows = 0
-    run_id = staging_tables_ready["run_id"]
+    run_id = staging_tables["run_id"]
 
     with context.resources.postgres.get_connection() as conn:
-        for table_info in staging_tables_ready["results"]:
+        for table_info in staging_tables["results"]:
             table_name = table_info["table"]
             load_mode = table_info["mode"]
 
@@ -41,7 +41,6 @@ def ods_tables_merged(
                 context.log.info(f"[OK] {table_name}: {rows:,} rows")
             except Exception as e:
                 context.log.error(f"[ERROR] {table_name}: {e}")
-                # rollback géré par la resource
                 continue
 
     return {"tables_merged": len(results), "total_rows": total_rows}
