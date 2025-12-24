@@ -7,7 +7,11 @@ from src.utils.logging import get_logger
 logger = get_logger(__name__)
 
 
-def build_time_dimension(conn, start_year: int = 2015, end_year: int = 2035) -> int:
+def build_time_dimension(
+    conn,
+    start_year: int = 2015,
+    end_year: int = 2035,
+) -> int:
     start_date = date(start_year, 1, 1)
     end_date = date(end_year, 12, 31)
 
@@ -46,8 +50,15 @@ def build_time_dimension(conn, start_year: int = 2015, end_year: int = 2035) -> 
             cur.execute(
                 sql.SQL("""
                     INSERT INTO {}.dim_time (
-                        date_key, year, quarter, month, day,
-                        day_of_week, day_name, week_of_year, is_weekend
+                        date_key,
+                        year,
+                        quarter,
+                        month,
+                        day,
+                        day_of_week,
+                        day_name,
+                        week_of_year,
+                        is_weekend
                     )
                     VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)
                 """).format(sql.Identifier(Schema.REFERENCE.value)),

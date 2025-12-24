@@ -13,16 +13,24 @@ EXCHANGE_RATES_API = "https://open.er-api.com/v6/latest/EUR"
 
 @retry(stop=stop_after_attempt(3), wait=wait_exponential(min=1, max=10))
 def fetch_currency_codes() -> dict[str, str]:
-    response = requests.get(CURRENCIES_API, timeout=10)
-    response.raise_for_status()
-    return response.json()
+    try:
+        response = requests.get(CURRENCIES_API, timeout=10)
+        response.raise_for_status()
+        return response.json()
+    except Exception:
+        logger.exception("Failed to fetch currency codes")
+        raise
 
 
 @retry(stop=stop_after_attempt(3), wait=wait_exponential(min=1, max=10))
 def fetch_exchange_rates() -> dict[str, float]:
-    response = requests.get(EXCHANGE_RATES_API, timeout=10)
-    response.raise_for_status()
-    return response.json()["rates"]
+    try:
+        response = requests.get(EXCHANGE_RATES_API, timeout=10)
+        response.raise_for_status()
+        return response.json()["rates"]
+    except Exception:
+        logger.exception("Failed to fetch exchange rates")
+        raise
 
 
 def load_currency_codes(conn) -> int:
@@ -90,8 +98,9 @@ def load_exchange_rates(conn) -> int:
                     INSERT INTO {}.exchange_rates (currency_code, rate)
                     VALUES (%s, %s)
                     ON CONFLICT (currency_code, rate_date)
-                    DO UPDATE SET rate = EXCLUDED.rate,
-                                  updated_at = CURRENT_TIMESTAMP
+                    DO UPDATE SET
+                        rate = EXCLUDED.rate,
+                        updated_at = CURRENT_TIMESTAMP
                 """).format(sql.Identifier(Schema.REFERENCE.value)),
                 (code, rate),
             )

@@ -1,11 +1,20 @@
 """Assets ODS"""
 from dagster import AssetExecutionContext, asset
+
 from src.core.ods.merger import merge_staging_to_ods
 
+
 @asset(
-    name="ods_tables_merged",
+    name="ods_tables",
     group_name="ods",
-    deps=["staging_tables_ready"],
+    required_resource_keys={"postgres"},
+    description="""
+    Tables ODS consolidées.
+
+    • Logique métier
+    • Fusion / historisation
+    • Source unique pour dbt
+    """,
 )
 def ods_tables_merged(
     context: AssetExecutionContext,
@@ -36,4 +45,3 @@ def ods_tables_merged(
                 continue
 
     return {"tables_merged": len(results), "total_rows": total_rows}
-

@@ -1,23 +1,26 @@
 """
 ============================================================================
-Assets Ingestion - SFTP → RAW → STAGING
+Assets Ingestion - Inventaire SFTP
 ============================================================================
 """
 
 from dagster import AssetExecutionContext, asset
-
-from src.core.raw.loader import load_parquet_to_raw
 from src.core.sftp.scanner import scan_parquet_files
-from src.core.staging.transformer import create_staging_table, load_raw_to_staging
-from src.db.monitoring import log_sftp_file
-from src.utils.logging import get_logger
-
-logger = get_logger(__name__)
 
 
-@asset(name="sftp_discovered_files", group_name="ingestion")
-def sftp_discovered_files(context: AssetExecutionContext) -> list[dict]:
-    """Scanner les fichiers parquet dans SFTP"""
+@asset(
+    name="sftp_parquet_inventory",
+    group_name="ingestion",
+    required_resource_keys={"postgres"},
+    description="""
+    Inventaire des fichiers Parquet disponibles sur le SFTP.
+
+    • Aucun chargement
+    • Lecture seule
+    • Sert de point d’entrée au pipeline
+    """,
+)
+def sftp_parquet_inventory(context: AssetExecutionContext) -> list[dict]:
     files = scan_parquet_files()
 
     discovered = [
@@ -30,81 +33,5 @@ def sftp_discovered_files(context: AssetExecutionContext) -> list[dict]:
         for f in files
     ]
 
-    context.log.info(f"Discovered {len(discovered)} files")
-
+    context.log.info("SFTP inventory built", file_count=len(discovered))
     return discovered
-
-@asset(name="raw_tables_loaded", group_name="ingestion")
-def raw_tables_loaded(context, sftp_discovered_files):
-    from pathlib import Path
-
-    results = []
-    total_rows = 0
-
-    with context.resources.postgres.get_connection() as conn:
-        for file_info in sftp_discovered_files:
-            parquet_path = Path(file_info["path"])
-            table_name = file_info["table_name"]
-            load_mode = file_info["load_mode"]
-
-            try:
-                log_id = log_sftp_file(parquet_path, table_name, load_mode)
-
-                rows = load_parquet_to_raw(
-                    parquet_path=parquet_path,
-                    table_name=table_name,
-                    log_id=log_id,
-                    conn=conn,
-                )
-
-                total_rows += rows
-                results.append({"table": table_name, "rows": rows, "mode": load_mode})
-
-            except Exception as e:
-                context.log.error(f"[ERROR] {table_name}: {e}")
-                continue
-
-    return {"tables_loaded": len(results), "total_rows": total_rows, "results": results}
-
-
-
-@asset(name="staging_tables_ready", group_name="ingestion")
-def staging_tables_ready(
-    context: AssetExecutionContext,
-    raw_tables_loaded: dict,
-) -> dict:
-    """Transformer RAW → STAGING"""
-    from datetime import datetime
-
-    run_id = f"dagster_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
-
-    results = []
-    total_rows = 0
-
-    for table_info in raw_tables_loaded["results"]:
-        table_name = table_info["table"]
-        load_mode = table_info["mode"]
-
-        try:
-            # Créer table STAGING
-            create_staging_table(table_name, load_mode)
-
-            # Charger RAW → STAGING
-            rows = load_raw_to_staging(table_name, run_id, load_mode)
-            total_rows += rows
-
-            results.append({"table": table_name, "rows": rows, "mode": load_mode})
-            context.log.info(f"[OK] {table_name}: {rows:,} rows")
-
-        except Exception as e:
-            context.log.error(f"[ERROR] {table_name}: {e}")
-            continue
-
-    context.log.info(f"STAGING Complete: {len(results)} tables, {total_rows:,} rows")
-
-    return {
-        "tables_processed": len(results),
-        "total_rows": total_rows,
-        "results": results,
-        "run_id": run_id,
-    }
