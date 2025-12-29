@@ -1,5 +1,5 @@
 """Assets ODS"""
-from dagster import AssetExecutionContext, asset
+from dagster import AssetExecutionContext, asset, AssetIn
 
 from src.core.ods.merger import merge_staging_to_ods
 
@@ -15,6 +15,16 @@ from src.core.ods.merger import merge_staging_to_ods
     • Fusion / historisation
     • Source unique pour dbt
     """,
+    ins={
+        "staging_tables": AssetIn(
+            key="staging_tables",
+            metadata={"description": "Tables STAGING prêtes"}
+        )
+    },
+    metadata={
+        "dagster/priority": "high",
+        "sla_minutes": 30
+    }
 )
 def ods_tables(  # ← Renommer la fonction aussi
     context: AssetExecutionContext,

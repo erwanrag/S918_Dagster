@@ -1,12 +1,286 @@
 [build-system]
-requires = ["setuptools>=68.0"]
+requires = ["setuptools>=68.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "s918-etl-dagster"
 version = "1.0.0"
+description = "Pipeline ETL Dagster pour CBM Analytics - Migration Progress/Proginov → PostgreSQL"
+readme = "README.md"
 requires-python = ">=3.12"
+license = {text = "Proprietary"}
+authors = [
+    {name = "CBM Analytics Data Team", email = "data-team@cbm.local"}
+]
+keywords = ["etl", "dagster", "postgresql", "dbt", "data-engineering"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Database",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+dependencies = [
+    # Dagster Core
+    "dagster>=1.9.0,<2.0.0",
+    "dagster-webserver>=1.9.0,<2.0.0",
+    "dagster-postgres>=0.27.0,<1.0.0",
+    "dagster-dbt>=0.28.0,<1.0.0",
+    
+    # dbt
+    "dbt-core>=1.8.0,<2.0.0",
+    "dbt-postgres>=1.8.0,<2.0.0",
+    
+    # Database
+    "psycopg2-binary>=2.9.9",
+    "sqlalchemy>=2.0.0,<3.0.0",
+    
+    # Data Processing
+    "pandas>=2.1.0,<3.0.0",
+    "pyarrow>=14.0.0,<16.0.0",
+    "numpy>=1.24.0,<2.0.0",
+    
+    # Configuration & Settings
+    "pydantic>=2.5.0,<3.0.0",
+    "pydantic-settings>=2.1.0,<3.0.0",
+    "python-dotenv>=1.0.0",
+    
+    # Utilities
+    "requests>=2.31.0",
+    "tenacity>=9.0.0",
+    
+    # Logging
+    "structlog>=24.1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    # Testing
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+    "pytest-mock>=3.12.0",
+    "pytest-asyncio>=0.21.0",
+    
+    # Linting & Formatting
+    "black>=24.1.0",
+    "ruff>=0.1.15",
+    "isort>=5.13.0",
+    
+    # Type Checking
+    "mypy>=1.8.0",
+    "types-requests>=2.31.0",
+    "types-psycopg2>=2.9.0",
+    
+    # Git Hooks
+    "pre-commit>=3.6.0",
+    
+    # Documentation
+    "mkdocs>=1.5.0",
+    "mkdocs-material>=9.5.0",
+    "mkdocstrings[python]>=0.24.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/cbm-analytics/s918-etl-dagster"
+Documentation = "https://docs.cbm.local/s918-etl"
+Repository = "https://github.com/cbm-analytics/s918-etl-dagster"
+Issues = "https://github.com/cbm-analytics/s918-etl-dagster/issues"
+
+[tool.dagster]
+module_name = "src.definitions"
+code_location_name = "s918_etl"
 
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["src*"]
+exclude = ["tests*", "docs*", ".archive*"]
+
+[tool.setuptools.package-data]
+src = ["py.typed"]
+
+# =============================================================================
+# Black - Code Formatter
+# =============================================================================
+[tool.black]
+line-length = 88
+target-version = ['py312']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+    \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+  | .archive
+)/
+'''
+
+# =============================================================================
+# Ruff - Fast Python Linter
+# =============================================================================
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+
+select = [
+    "E",    # pycodestyle errors
+    "W",    # pycodestyle warnings
+    "F",    # pyflakes
+    "I",    # isort
+    "B",    # flake8-bugbear
+    "C4",   # flake8-comprehensions
+    "UP",   # pyupgrade
+    "ARG",  # flake8-unused-arguments
+    "SIM",  # flake8-simplify
+]
+
+ignore = [
+    "E501",   # line too long (handled by black)
+    "B008",   # function call in argument defaults
+    "W191",   # indentation contains tabs
+    "B904",   # raise-without-from-inside-except
+]
+
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".hg",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "venv",
+    ".archive",
+]
+
+[tool.ruff.per-file-ignores]
+"__init__.py" = ["F401"]  # Unused imports OK in __init__
+
+[tool.ruff.isort]
+known-first-party = ["src"]
+
+# =============================================================================
+# isort - Import Sorting
+# =============================================================================
+[tool.isort]
+profile = "black"
+line_length = 88
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+ensure_newline_before_comments = true
+skip_glob = [".venv/*", "build/*", "dist/*", ".archive/*"]
+
+# =============================================================================
+# mypy - Static Type Checker
+# =============================================================================
+[tool.mypy]
+python_version = "3.12"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false  # Progressive typing
+ignore_missing_imports = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+check_untyped_defs = true
+strict_equality = true
+
+[[tool.mypy.overrides]]
+module = [
+    "dagster.*",
+    "dagster_dbt.*",
+    "pandas.*",
+    "pyarrow.*",
+    "sqlalchemy.*",
+]
+ignore_missing_imports = true
+
+# =============================================================================
+# pytest - Testing Framework
+# =============================================================================
+[tool.pytest.ini_options]
+minversion = "7.0"
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "-v",
+    "--strict-markers",
+    "--tb=short",
+    "--cov=src",
+    "--cov-report=term-missing",
+    "--cov-report=html",
+    "--cov-report=xml",
+]
+
+markers = [
+    "unit: Unit tests",
+    "integration: Integration tests",
+    "slow: Slow running tests",
+    "database: Tests requiring database",
+    "sftp: Tests requiring SFTP access",
+]
+
+filterwarnings = [
+    "ignore::DeprecationWarning",
+    "ignore::PendingDeprecationWarning",
+]
+
+# =============================================================================
+# Coverage - Code Coverage
+# =============================================================================
+[tool.coverage.run]
+source = ["src"]
+omit = [
+    "tests/*",
+    "src/__init__.py",
+    "*/tests/*",
+    "*/__pycache__/*",
+    ".venv/*",
+]
+branch = true
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "def __str__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+    "class .*\\bProtocol\\):",
+    "@(abc\\.)?abstractmethod",
+]
+precision = 2
+show_missing = true
+skip_covered = false
+
+[tool.coverage.html]
+directory = "htmlcov"
+
+[tool.coverage.xml]
+output = "coverage.xml"

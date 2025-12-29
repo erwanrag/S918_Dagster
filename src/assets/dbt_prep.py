@@ -1,30 +1,42 @@
 """
-============================================================================
-Assets dbt PREP
-============================================================================
+Assets dbt PREP - Solution wrapper simple
 """
 
 from pathlib import Path
-from dagster import AssetExecutionContext
-from dagster_dbt import DbtCliResource, dbt_assets
+from dagster import AssetExecutionContext, asset
+from dagster_dbt import DbtCliResource
 
-DBT_PROJECT_DIR = Path("/data/prefect/projects/ETL/dbt/etl_db")
-DBT_MANIFEST_PATH = DBT_PROJECT_DIR / "target" / "manifest.json"
+from src.config.settings import get_settings
+
+settings = get_settings()
 
 
-@dbt_assets(
-    manifest=DBT_MANIFEST_PATH,
-    select="prep.*",
+@asset(
+    name="dbt_prep_models",
+    group_name="prep",
+    required_resource_keys={"dbt"},
+    description="Modèles dbt PREP - Dépend de ODS",
 )
 def dbt_prep_models(
     context: AssetExecutionContext,
-    dbt: DbtCliResource,
-):
+    ods_tables: dict,  # ← DÉPENDANCE EXPLICITE VERS ODS
+) -> dict:
     """
-    Transformations dbt PREP.
-
-    • Source : ODS
-    • Usage : préparation analytique
-    • Porté par dbt
+    Exécute dbt build pour tous les modèles PREP après que ODS soit prêt.
+    
+    Cette approche wrapper garantit que dbt ne lance PAS avant ODS.
     """
-    yield from dbt.cli(["run"], context=context).stream()
+    context.log.info(f"ODS ready: {ods_tables.get('tables_merged', 0)} tables merged")
+    context.log.info("Starting dbt build for PREP models")
+    
+    # Obtenir la resource dbt
+    dbt: DbtCliResource = context.resources.dbt
+    
+    # Exécuter dbt build
+    result = dbt.cli(["build"], context=context).wait()
+    
+    if result.success:
+        context.log.info("dbt build completed successfully")
+        return {"success": True, "ods_tables_merged": ods_tables.get('tables_merged', 0)}
+    else:
+        raise Exception(f"dbt build failed")

@@ -1,8 +1,7 @@
 """
 ============================================================================
-Alerting Hook - Dagster ETL (Enhanced)
+Alerting Hooks - Notifications Teams/Email (Enhanced)
 ============================================================================
-Hook pour envoyer des alertes Teams/Email sur échec/succès de run
 """
 
 import logging
@@ -12,9 +11,16 @@ from typing import Optional
 
 import requests
 from dagster import HookContext, failure_hook, success_hook
+import psycopg2
+
+from src.config.settings import get_settings
 
 logger = logging.getLogger(__name__)
 
+
+# =============================================================================
+# Helpers - Notifications
+# =============================================================================
 
 def send_teams_notification(
     webhook_url: str,
@@ -25,7 +31,7 @@ def send_teams_notification(
     action_url: Optional[str] = None,
 ) -> bool:
     """
-    Envoie notification Teams via webhook (format MessageCard)
+    Envoie notification Teams via webhook (format MessageCard).
     
     Args:
         webhook_url: URL du webhook Teams
@@ -86,7 +92,7 @@ def send_email_notification(
     smtp_password: Optional[str] = None,
 ) -> bool:
     """
-    Envoie notification email
+    Envoie notification email.
     
     Args:
         smtp_host: Serveur SMTP
@@ -94,7 +100,7 @@ def send_email_notification(
         from_email: Email expéditeur
         to_email: Email destinataire
         subject: Sujet
-        body: Corps du message
+        body: Corps du message (HTML)
         smtp_user: User SMTP (optionnel)
         smtp_password: Password SMTP (optionnel)
     
@@ -127,42 +133,47 @@ def send_email_notification(
         return False
 
 
+# =============================================================================
+# Hooks Dagster
+# =============================================================================
+
 @failure_hook
 def alert_on_failure(context: HookContext):
     """
-    Hook Dagster déclenché sur échec d'un run (Enhanced)
+    Hook Dagster déclenché sur échec d'un run.
+    
+    Envoie notifications Teams + Email selon configuration.
     """
+    settings = get_settings()
+    
     run_id = context.run_id
     job_name = context.job_name
     step_key = context.step_key
     
-    # Configuration depuis env
-    teams_webhook = os.getenv("TEAMS_WEBHOOK_URL")
-    email_enabled = os.getenv("EMAIL_ALERTS_ENABLED", "false").lower() == "true"
+    # Construire URL Dagster
     dagster_url = os.getenv("DAGSTER_URL", "http://172.30.27.14:3000")
-    
-    # Construire URL Dagster pour ce run
     run_url = f"{dagster_url}/runs/{run_id}"
     
-    # Timestamp formaté
+    # Timestamp
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     
-    title = f"❌ ETL Pipeline Failed"
+    # Message Teams
+    title = "❌ ETL Pipeline Failed"
     message = f"**Job:** {job_name}\n**Step:** `{step_key}`\n**Time:** {timestamp}"
     
     facts = {
         "🔧 Job": job_name,
         "📦 Step": step_key,
-        "🆔 Run ID": run_id[:8] + "...",  # Short ID
+        "🆔 Run ID": run_id[:8] + "...",
         "🕐 Time": timestamp,
-        "💻 Server": "S918-ETL-01-FR",
+        "💻 Server": "S918-ETL-02-FR",
         "🚨 Status": "FAILED"
     }
     
     # Teams notification
-    if teams_webhook:
+    if settings.teams_webhook_url:
         send_teams_notification(
-            webhook_url=teams_webhook,
+            webhook_url=settings.teams_webhook_url,
             title=title,
             message=message,
             color="FF0000",  # Rouge
@@ -171,80 +182,153 @@ def alert_on_failure(context: HookContext):
         )
     
     # Email notification
-    if email_enabled:
-        smtp_host = os.getenv("SMTP_SERVER", "localhost")
-        smtp_port = int(os.getenv("SMTP_PORT", "25"))
-        from_email = os.getenv("ALERT_FROM_EMAIL", "etl@cbm.local")
-        to_email = os.getenv("ALERT_TO_EMAILS", "data-team@cbm.local")
-        
+    if settings.email_alerts_enabled:
         email_body = f"""
         <html>
         <body style="font-family: Arial, sans-serif;">
             <h2 style="color: #d32f2f;">❌ ETL Pipeline Failed</h2>
             <table style="border-collapse: collapse; width: 100%;">
-                <tr><td style="padding: 8px; background: #f5f5f5;"><b>Job</b></td><td style="padding: 8px;">{job_name}</td></tr>
-                <tr><td style="padding: 8px; background: #f5f5f5;"><b>Step</b></td><td style="padding: 8px;">{step_key}</td></tr>
-                <tr><td style="padding: 8px; background: #f5f5f5;"><b>Run ID</b></td><td style="padding: 8px;">{run_id}</td></tr>
-                <tr><td style="padding: 8px; background: #f5f5f5;"><b>Time</b></td><td style="padding: 8px;">{timestamp}</td></tr>
+                <tr>
+                    <td style="padding: 8px; background: #f5f5f5;"><b>Job</b></td>
+                    <td style="padding: 8px;">{job_name}</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; background: #f5f5f5;"><b>Step</b></td>
+                    <td style="padding: 8px;">{step_key}</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; background: #f5f5f5;"><b>Run ID</b></td>
+                    <td style="padding: 8px;">{run_id}</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; background: #f5f5f5;"><b>Time</b></td>
+                    <td style="padding: 8px;">{timestamp}</td>
+                </tr>
             </table>
-            <p><a href="{run_url}" style="background: #1976d2; color: white; padding: 10px 20px; text-decoration: none; display: inline-block; margin-top: 10px;">View in Dagster</a></p>
+            <p>
+                <a href="{run_url}" 
+                   style="background: #1976d2; color: white; padding: 10px 20px; 
+                          text-decoration: none; display: inline-block; margin-top: 10px;">
+                    View in Dagster
+                </a>
+            </p>
         </body>
         </html>
         """
         
-        send_email_notification(
-            smtp_host=smtp_host,
-            smtp_port=smtp_port,
-            from_email=from_email,
-            to_email=to_email,
-            subject=f"❌ ETL Failed: {job_name}",
-            body=email_body,
-        )
+        # Envoyer à tous les destinataires
+        for email in settings.alert_to_emails:
+            send_email_notification(
+                smtp_host=settings.smtp_host,
+                smtp_port=settings.smtp_port,
+                from_email=settings.alert_from_email,
+                to_email=email,
+                subject=f"❌ ETL Failed: {job_name}",
+                body=email_body,
+                smtp_user=settings.smtp_user,
+                smtp_password=settings.smtp_password,
+            )
 
 
 @success_hook
 def alert_on_success(context: HookContext):
     """
-    Hook Dagster déclenché sur succès d'un run (Enhanced)
-    """
-    # Optionnel: notification uniquement pour pipeline complet
-    job_name = context.job_name
+    Hook Dagster déclenché sur succès d'un run.
     
-    # Ne notifier que pour le job principal
+    Notification uniquement pour pipeline complet.
+    """
+    settings = get_settings()
+    
+    # Notifier uniquement pour job principal
+    job_name = context.job_name
     if job_name != "full_etl_pipeline":
         return
     
     run_id = context.run_id
-    teams_webhook = os.getenv("TEAMS_WEBHOOK_URL")
     dagster_url = os.getenv("DAGSTER_URL", "http://172.30.27.14:3000")
-    
     run_url = f"{dagster_url}/runs/{run_id}"
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     
-    if teams_webhook:
-        title = f"✅ ETL Pipeline Succeeded"
-        message = f"**Job:** {job_name}\n**Time:** {timestamp}"
-        
+    title = "✅ ETL Pipeline Succeeded"
+    message = f"**Job:** {job_name}\n**Time:** {timestamp}"
+    
+    facts = {
+        "🔧 Job": job_name,
+        "🆔 Run ID": run_id[:8] + "...",
+        "🕐 Time": timestamp,
+        "💻 Server": "S918-ETL-02-FR",
+        "✅ Status": "SUCCESS"
+    }
+    
+    # Teams notification
+    if settings.teams_webhook_url:
         send_teams_notification(
-            webhook_url=teams_webhook,
+            webhook_url=settings.teams_webhook_url,
             title=title,
             message=message,
             color="28A745",  # Vert
-            facts={
-                "🔧 Job": job_name,
-                "🆔 Run ID": run_id[:8] + "...",
-                "🕐 Time": timestamp,
-                "💻 Server": "S918-ETL-01-FR",
-                "✅ Status": "SUCCESS"
-            },
+            facts=facts,
             action_url=run_url,
         )
 
 
-# Export hooks
+@success_hook
+def metrics_hook(context: HookContext):
+    """
+    Hook pour collecter métriques de performance.
+    
+    Logger durée et stats dans PostgreSQL.
+    """
+    settings = get_settings()
+    job_name = context.job_name
+    run_id = context.run_id
+    
+    try:
+        # TODO: Récupérer durée depuis context
+        # Pour l'instant on log juste le timestamp
+        
+        conn = psycopg2.connect(settings.postgres_url)
+        
+        try:
+            with conn.cursor() as cur:
+                # Créer table metrics si n'existe pas
+                cur.execute("""
+                    CREATE TABLE IF NOT EXISTS etl_logs.job_metrics (
+                        id SERIAL PRIMARY KEY,
+                        job_name TEXT NOT NULL,
+                        run_id TEXT NOT NULL,
+                        duration_seconds INTEGER,
+                        success BOOLEAN NOT NULL,
+                        timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+                    )
+                """)
+                
+                # Insérer métrique
+                cur.execute("""
+                    INSERT INTO etl_logs.job_metrics (
+                        job_name, run_id, duration_seconds, success, timestamp
+                    )
+                    VALUES (%s, %s, %s, true, CURRENT_TIMESTAMP)
+                """, (job_name, run_id, None))  # duration à implémenter
+                
+                conn.commit()
+                logger.info(f"[METRICS] Logged success for {job_name}")
+        
+        finally:
+            conn.close()
+            
+    except Exception as e:
+        logger.warning(f"[METRICS] Failed to log: {e}")
+
+
+# =============================================================================
+# Export
+# =============================================================================
+
 __all__ = [
     "alert_on_failure",
     "alert_on_success",
+    "metrics_hook",
     "send_teams_notification",
     "send_email_notification",
 ]

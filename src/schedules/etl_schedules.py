@@ -1,39 +1,33 @@
 """Schedules ETL"""
-from dagster import ScheduleDefinition
+from dagster import ScheduleDefinition, DefaultScheduleStatus
 from src.jobs.pipelines import (
     full_etl_pipeline,
-    ingestion_pipeline,
     services_pipeline,
 )
 
-hourly_schedule = ScheduleDefinition(
-    name="hourly_etl_schedule",
+# =============================================================================
+# Pipeline ETL Production
+# =============================================================================
+
+production_schedule = ScheduleDefinition(
+    name="production_etl",
     job=full_etl_pipeline,
-    cron_schedule="0 * * * *",
+    cron_schedule="30 * * * *",  # Toutes les heures à :30
     execution_timezone="Europe/Paris",
-    description="Pipeline complet toutes les heures",
+    description="Pipeline ETL complet toutes les heures à :30",
+    default_status=DefaultScheduleStatus.RUNNING,
 )
 
-daily_schedule = ScheduleDefinition(
-    name="daily_etl_schedule",
-    job=full_etl_pipeline,
-    cron_schedule="0 2 * * *",
-    execution_timezone="Europe/Paris",
-    description="Pipeline quotidien 2h",
-)
 
-frequent_schedule = ScheduleDefinition(
-    name="frequent_etl_schedule",
-    job=ingestion_pipeline,
-    cron_schedule="0 */4 * * *",
-    execution_timezone="Europe/Paris",
-    description="Ingestion toutes les 4h",
-)
+# =============================================================================
+# Services (devises + dimension temps)
+# =============================================================================
 
 services_schedule = ScheduleDefinition(
-    name="services_schedule",
+    name="services_refresh",
     job=services_pipeline,
-    cron_schedule="0 3 * * *",
+    cron_schedule="0 3 * * *",  # 3h du matin
     execution_timezone="Europe/Paris",
-    description="Services quotidien 3h",
+    description="Refresh devises + dimension temps quotidien",
+    default_status=DefaultScheduleStatus.RUNNING,
 )
