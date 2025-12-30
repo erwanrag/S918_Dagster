@@ -63,7 +63,7 @@ class Settings(BaseSettings):
     # dbt
     # =========================================================================
     dbt_project_dir: Path = Field(
-        default=Path("/data/prefect/projects/ETL/dbt/etl_db"),
+        default=Path("/data/dbt/etl_db"),
         alias="ETL_DBT_PROJECT"
     )
     dbt_threads: int = Field(default=4, alias="DBT_THREADS")

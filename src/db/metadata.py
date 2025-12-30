@@ -28,8 +28,7 @@ def get_table_metadata(conn, table_name: str) -> dict[str, Any] | None:
                     "ConfigName",
                     "PrimaryKeyCols",
                     "HasTimestamps",
-                    "ForceFull",
-                    "Description"
+                    "Notes" as description
                 FROM {}.etl_tables
                 WHERE COALESCE("ConfigName", "TableName") = %s
                   AND "IsActive" = TRUE
@@ -46,11 +45,16 @@ def get_table_metadata(conn, table_name: str) -> dict[str, Any] | None:
         (
             table_name_db,
             config_name,
-            primary_keys,
+            primary_keys_str,
             has_timestamps,
-            force_full,
             description,
         ) = row
+        
+        # Parser PrimaryKeyCols (string "cod_cli" ou "cod_crn, cod_pc")
+        if primary_keys_str:
+            primary_keys = [pk.strip() for pk in primary_keys_str.split(",")]
+        else:
+            primary_keys = []
 
         # ------------------------------------------------------------------
         # Colonnes
@@ -60,6 +64,7 @@ def get_table_metadata(conn, table_name: str) -> dict[str, Any] | None:
                 SELECT 
                     "ColumnName",
                     "DataType",
+                    "ProgressType",
                     "IsMandatory",
                     "Width",
                     "Scale",
@@ -75,10 +80,11 @@ def get_table_metadata(conn, table_name: str) -> dict[str, Any] | None:
             {
                 "column_name": r[0],
                 "data_type": r[1],
-                "is_mandatory": r[2],
-                "width": r[3],
-                "scale": r[4],
-                "extent": r[5],
+                "progress_type": r[2],
+                "is_mandatory": r[3],
+                "width": r[4],
+                "scale": r[5],
+                "extent": r[6] or 0,
             }
             for r in cur.fetchall()
         ]
@@ -87,9 +93,9 @@ def get_table_metadata(conn, table_name: str) -> dict[str, Any] | None:
             "table_name": table_name_db,
             "config_name": config_name,
             "physical_name": config_name or table_name_db,
-            "primary_keys": primary_keys or [],
-            "has_timestamps": has_timestamps,
-            "force_full": force_full,
+            "primary_keys": primary_keys,
+            "has_timestamps": has_timestamps or False,
+            "force_full": False,  
             "description": description or "",
             "columns": columns,
         }

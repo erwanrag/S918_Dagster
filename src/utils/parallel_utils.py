@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 def process_files_parallel(
     files: List[Path],
-    process_func: Callable[[Path], Tuple[str, bool, Optional[str]]],
+    process_func: Callable[[Path], Tuple[str, str, bool, Optional[str], Optional[int]]],
     max_workers: int = 2,
     description: str = "Processing files",
 ) -> dict:
@@ -23,7 +23,8 @@ def process_files_parallel(
     
     Args:
         files: Liste des fichiers à traiter
-        process_func: Fonction de traitement (file_path) -> (table_name, success, error_msg)
+        process_func: Fonction de traitement 
+                     (file_path) -> (table_name, load_mode, success, error_msg, rows)
         max_workers: Nombre de threads parallèles
         description: Description pour les logs
     
@@ -50,25 +51,29 @@ def process_files_parallel(
             file_path = future_to_file[future]
             
             try:
-                table_name, success, error_msg = future.result()
+                # Unpack 5 éléments
+                table_name, load_mode, success, error_msg, rows = future.result()
                 
                 if success:
                     results["success"].append({
-                        "file": file_path.name,
+                        "file": str(file_path),
                         "table": table_name,
+                        "mode": load_mode,
+                        "rows": rows,
                     })
-                    logger.info(f"[OK] {table_name} traité")
+                    logger.info(f"[OK] {table_name} traité ({rows} rows)")
                 else:
                     results["failed"].append({
-                        "file": file_path.name,
+                        "file": str(file_path),
                         "table": table_name,
+                        "mode": load_mode,
                         "error": error_msg,
                     })
                     logger.error(f"[FAIL] {table_name}: {error_msg}")
                     
             except Exception as e:
                 results["failed"].append({
-                    "file": file_path.name,
+                    "file": str(file_path),
                     "error": str(e),
                 })
                 logger.exception(f"[ERROR] Exception traitement {file_path.name}: {e}")
@@ -124,7 +129,7 @@ def group_files_by_size(
 
 def process_files_by_size_strategy(
     files: List[Path],
-    process_func: Callable[[Path], Tuple[str, bool, Optional[str]]],
+    process_func: Callable[[Path], Tuple[str, str, bool, Optional[str], Optional[int]]],
 ) -> dict:
     """
     Traite les fichiers avec stratégie optimisée par taille (16GB RAM)
@@ -132,6 +137,7 @@ def process_files_by_size_strategy(
     Args:
         files: Liste des fichiers
         process_func: Fonction de traitement
+                     (file_path) -> (table_name, load_mode, success, error_msg, rows)
     
     Returns:
         dict avec résultats agrégés
