@@ -57,7 +57,7 @@ def get_table_metadata(conn, table_name: str) -> dict[str, Any] | None:
             primary_keys = []
 
         # ------------------------------------------------------------------
-        # Colonnes
+        # Colonnes - LECTURE DIRECTE DES TYPES NORMALISÉS
         # ------------------------------------------------------------------
         cur.execute(
             sql.SQL("""
@@ -79,7 +79,7 @@ def get_table_metadata(conn, table_name: str) -> dict[str, Any] | None:
         columns = [
             {
                 "column_name": r[0],
-                "data_type": r[1],
+                "data_type": r[1],  # ← Déjà normalisé par SQL Server (BOOLEAN, VARCHAR, etc.)
                 "progress_type": r[2],
                 "is_mandatory": r[3],
                 "width": r[4],

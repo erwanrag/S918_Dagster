@@ -1,11 +1,12 @@
 """
 ============================================================================
-RAW Loader - Copie directe Parquet → RAW
+RAW Loader - Copie directe Parquet → RAW (TOUT EN TEXT)
 ============================================================================
 Version finale tenant compte de la réalité du Parquet :
+- TOUT en TEXT dans RAW (pas de typage)
 - Les colonnes EXTENT sont stockées comme TEXT avec séparateur ";"
 - Pas d'éclatement en RAW, juste copie directe
-- L'éclatement se fera en STAGING
+- L'éclatement ET le typage se feront en STAGING
 ============================================================================
 """
 
@@ -32,10 +33,10 @@ def load_parquet_to_raw(
     conn=None,  # Ignoré, on crée notre propre connexion
 ) -> int:
     """
-    Charger parquet dans RAW avec typage depuis métadonnées
+    Charger parquet dans RAW - TOUT EN TEXT
     
-    IMPORTANT : Les colonnes EXTENT restent en TEXT (string brut avec ";")
-    Elles seront éclatées en STAGING avec split_part()
+    IMPORTANT : TOUTES les colonnes sont en TEXT dans RAW (données brutes)
+    Le typage strict se fera en STAGING
     
     Args:
         parquet_path: Chemin du fichier parquet
@@ -79,29 +80,16 @@ def load_parquet_to_raw(
                 return 0
             
             # ============================================================
-            # 3. CREATE TABLE depuis métadonnées
+            # 3. CREATE TABLE - TOUT EN TEXT
             # ============================================================
-            logger.debug("Building CREATE TABLE statement from metadata")
+            logger.debug("Building CREATE TABLE statement (all TEXT)")
             
             columns_def = []
-            extent_count = 0
             
+            # TOUTES les colonnes en TEXT (RAW = données brutes)
             for col in columns_metadata:
                 col_name = col["column_name"]
-                data_type = col.get("data_type", "TEXT")
-                extent = col.get("extent", 0)
-                
-                # COLONNES EXTENT → TEXT (stockage brut du string avec ";")
-                # Elles seront éclatées en STAGING
-                if extent > 0:
-                    data_type = "TEXT"
-                    extent_count += 1
-                    logger.debug(
-                        f"Column {col_name} has extent={extent}, using TEXT "
-                        f"(will be split in STAGING)"
-                    )
-                
-                columns_def.append(f'"{col_name}" {data_type}')
+                columns_def.append(f'"{col_name}" TEXT')
             
             # Ajouter colonnes ETL
             columns_def.extend([
@@ -112,11 +100,9 @@ def load_parquet_to_raw(
             
             create_sql = f"CREATE TABLE {full_table} ({', '.join(columns_def)})"
             
-            if extent_count > 0:
-                logger.info(
-                    f"Table has {extent_count} EXTENT column(s), "
-                    f"stored as TEXT in RAW"
-                )
+            logger.info(
+                f"Creating RAW table with {len(columns_metadata)} columns (all TEXT)"
+            )
             
             logger.debug(f"Executing CREATE TABLE")
             cur.execute(create_sql)
@@ -162,8 +148,7 @@ def load_parquet_to_raw(
         logger.info(
             "RAW loaded successfully", 
             table=table_name, 
-            rows=total_rows,
-            extent_columns=extent_count
+            rows=total_rows
         )
         
         # Update monitoring AVANT de fermer connexion

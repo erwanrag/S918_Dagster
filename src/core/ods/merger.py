@@ -22,6 +22,7 @@ from datetime import datetime
 from src.config.constants import LoadMode, Schema
 from src.db.metadata import get_table_metadata
 from src.core.ods.typing import build_ods_columns_definition, build_ods_select_with_casting
+from src.core.ods.hashdiff import build_ods_hashdiff
 from src.utils.logging import get_logger
 
 logger = get_logger(__name__)
@@ -225,13 +226,16 @@ def merge_staging_to_ods(
     stg_schema = Schema.STAGING.value
     ods_schema = Schema.ODS.value
     ods_table = metadata["physical_name"].lower()
-    stg_table = f"stg_{ods_table}"  # ⚠️ STAGING utilise préfixe stg_
+    stg_table = ods_table
     
     columns_metadata = metadata["columns"]
     primary_keys: List[str] = list(metadata.get("primary_keys") or [])
     
     if not primary_keys:
         raise ValueError(f"No primary keys for SCD2: {table_name}")
+
+    # Calculer hashdiff depuis colonnes STAGING
+    hashdiff_expr = build_ods_hashdiff(columns_metadata, source_alias="src")
 
     with conn.cursor() as cur:
         _ensure_ods_schema(cur, ods_schema)
@@ -269,7 +273,7 @@ def merge_staging_to_ods(
                     NULL AS "_etl_valid_to",
                     TRUE AS "_etl_is_current",
                     FALSE AS "_etl_is_deleted",
-                    src."_etl_hashdiff",
+                    {hashdiff_expr} AS "_etl_hashdiff",
                     %s AS "_etl_run_id"
                 FROM {stg_schema}.{stg_table} src
             """).format(
@@ -280,6 +284,7 @@ def merge_staging_to_ods(
                     for col in build_ods_columns_definition(columns_metadata)
                 ),
                 select_expr=sql.SQL(select_with_cast),
+                hashdiff_expr=sql.SQL(hashdiff_expr),
                 stg_schema=sql.Identifier(stg_schema),
                 stg_table=sql.Identifier(stg_table),
             )
@@ -328,7 +333,7 @@ def merge_staging_to_ods(
                     NULL AS "_etl_valid_to",
                     TRUE AS "_etl_is_current",
                     FALSE AS "_etl_is_deleted",
-                    src."_etl_hashdiff",
+                    {hashdiff_expr} AS "_etl_hashdiff",
                     %s AS "_etl_run_id"
                 FROM {stg_schema}.{stg_table} src
             """).format(
@@ -339,6 +344,7 @@ def merge_staging_to_ods(
                     for col in build_ods_columns_definition(columns_metadata)
                 ),
                 select_expr=sql.SQL(select_with_cast),
+                hashdiff_expr=sql.SQL(hashdiff_expr),
                 stg_schema=sql.Identifier(stg_schema),
                 stg_table=sql.Identifier(stg_table),
             )
@@ -355,6 +361,9 @@ def merge_staging_to_ods(
         # ------------------------------------------------------------------
         # Table existe : MERGE SCD2 (INCREMENTAL ou FULL)
         # ------------------------------------------------------------------
+        
+        # Calculer hashdiff avec alias "stg" pour les requêtes de merge
+        hashdiff_expr_stg = build_ods_hashdiff(columns_metadata, source_alias="stg")
         
         distinct_on = _dedup_distinct_on(primary_keys)
         order_by = _dedup_order_by(primary_keys)
@@ -374,7 +383,7 @@ def merge_staging_to_ods(
             WITH source AS (
                 SELECT DISTINCT ON ({distinct_on})
                     {pk_cols},
-                    stg."_etl_hashdiff"
+                    {hashdiff_expr} AS "_etl_hashdiff"
                 FROM {stg_schema}.{stg_table} stg
                 ORDER BY {order_by}
             )
@@ -390,6 +399,7 @@ def merge_staging_to_ods(
         """).format(
             distinct_on=distinct_on,
             pk_cols=sql.SQL(", ").join(sql.Identifier(pk) for pk in primary_keys),
+            hashdiff_expr=sql.SQL(hashdiff_expr_stg),
             stg_schema=sql.Identifier(stg_schema),
             stg_table=sql.Identifier(stg_table),
             order_by=order_by,
@@ -408,7 +418,7 @@ def merge_staging_to_ods(
             WITH source AS (
                 SELECT DISTINCT ON ({distinct_on})
                     {select_expr},
-                    stg."_etl_hashdiff"
+                    {hashdiff_expr} AS "_etl_hashdiff"
                 FROM {stg_schema}.{stg_table} stg
                 ORDER BY {order_by}
             )
@@ -441,6 +451,7 @@ def merge_staging_to_ods(
         """).format(
             distinct_on=distinct_on,
             select_expr=sql.SQL(select_with_cast),
+            hashdiff_expr=sql.SQL(hashdiff_expr_stg),
             stg_schema=sql.Identifier(stg_schema),
             stg_table=sql.Identifier(stg_table),
             order_by=order_by,

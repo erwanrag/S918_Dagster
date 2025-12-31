@@ -23,14 +23,14 @@ def build_hashdiff_with_exploded_extent(
     
     Cette version inclut zal_1, zal_2, ... au lieu de zal
     Car en STAGING les colonnes EXTENT sont déjà éclatées
-    
+
     Args:
         columns: Liste des métadonnées colonnes (depuis metadata.json)
         exclude_columns: Colonnes additionnelles à exclure
-    
+
     Returns:
         Expression SQL MD5 avec colonnes éclatées
-    
+
     Example:
         Input columns: [
             {"column_name": "cod_cli", "extent": 0},

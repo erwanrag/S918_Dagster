@@ -15,7 +15,6 @@ from src.core.staging.extent import (
     get_extent_columns,
     count_expanded_columns
 )
-from src.core.staging.hashdiff import build_hashdiff_with_exploded_extent
 from src.core.ods.typing import get_ods_type_for_extent_element
 from src.db.metadata import get_table_metadata
 from src.utils.logging import get_logger
@@ -98,6 +97,11 @@ def create_staging_table(
                 # Colonne EXTENT: créer colonnes éclatées avec typage strict
                 for i in range(1, extent + 1):
                     element_type = get_ods_type_for_extent_element(col, i)
+                    logger.debug(f"Column {col_name}_{i} has type: {element_type}")
+                    # Défensif : accepter BIT, LOGICAL, BOOLEAN
+                    if element_type.upper() in ["BIT", "LOGICAL"]:
+                        element_type = "BOOLEAN"
+                        logger.debug(f"Normalized to BOOLEAN for EXTENT column {col_name}_{i}")
                     columns_sql.append(
                         sql.SQL("{} {}").format(
                             sql.Identifier(f"{col_name}_{i}"),
@@ -107,6 +111,11 @@ def create_staging_table(
             else:
                 # Colonne normale: utiliser data_type depuis métadonnées
                 data_type = col.get("data_type", "TEXT")
+                logger.debug(f"Column {col_name} has type: {data_type}")
+                # Défensif : accepter BIT, LOGICAL, BOOLEAN
+                if data_type.upper() in ["BIT", "LOGICAL"]:
+                    data_type = "BOOLEAN"
+                    logger.debug(f"Normalized to BOOLEAN for column {col_name}")
                 columns_sql.append(
                     sql.SQL("{} {}").format(
                         sql.Identifier(col_name),
@@ -116,7 +125,6 @@ def create_staging_table(
 
         # ETL columns
         columns_sql.extend([
-            sql.SQL('"_etl_hashdiff" VARCHAR(32)'),
             sql.SQL('"_etl_run_id" VARCHAR(100)'),
             sql.SQL('"_etl_valid_from" TIMESTAMP DEFAULT CURRENT_TIMESTAMP'),
         ])
@@ -151,16 +159,8 @@ def load_raw_to_staging(
     conn,
 ) -> int:
     """
-    Charger RAW → STAGING avec éclatement EXTENT + cast + hashdiff + déduplication
-    
-    Transformations:
-    - Colonnes EXTENT éclatées avec split_part(colonne, ';', N)
-    - Cast vers types stricts (NUMERIC, INTEGER, BOOLEAN, etc.)
-    - Hashdiff calculé sur colonnes éclatées
-    - DISTINCT ON (hashdiff) pour déduplication
-
-    Returns:
-        Nombre de lignes chargées
+    Charger RAW → STAGING avec éclatement EXTENT + cast
+    PAS de hashdiff ici (calculé en ODS)
     """
     metadata = get_table_metadata(conn, table_name)
     if not metadata:
@@ -169,77 +169,40 @@ def load_raw_to_staging(
     staging_schema = Schema.STAGING.value
     raw_schema = Schema.RAW.value
     table = metadata["physical_name"].lower()
-    
     columns_metadata = metadata["columns"]
 
-    # Construire SELECT avec éclatement extent (split_part) + cast
     select_expr = build_select_with_extent_and_cast(columns_metadata, "src")
-
-    # Construire hashdiff sur colonnes éclatées
-    hashdiff_expr = build_hashdiff_with_exploded_extent(columns_metadata)
     
-    logger.info(
-        "Loading RAW to STAGING",
-        table=table_name,
-        physical=table,
-        mode=load_mode
-    )
+    logger.info("Loading RAW to STAGING", table=table_name, physical=table, mode=load_mode)
 
     with conn.cursor() as cur:
-        # ------------------------------------------------------------------
-        # Truncate if FULL_RESET
-        # ------------------------------------------------------------------
         if load_mode == LoadMode.FULL_RESET.value:
             cur.execute(
                 sql.SQL("TRUNCATE TABLE {}.{}")
-                .format(
-                    sql.Identifier(staging_schema),
-                    sql.Identifier(table),
-                )
+                .format(sql.Identifier(staging_schema), sql.Identifier(table))
             )
             logger.debug("Staging table truncated", table=table_name)
 
-        # ------------------------------------------------------------------
-        # Insert data avec CTE pour éclatement puis hashdiff
-        # ------------------------------------------------------------------
         query = sql.SQL("""
-            WITH exploded AS (
-                SELECT 
-                    {select_expr}
-                FROM {raw_schema}.{raw_table} src
-            ),
-            hashed AS (
-                SELECT 
-                    *,
-                    {hashdiff_expr} AS "_etl_hashdiff",
-                    %s AS "_etl_run_id",
-                    CURRENT_TIMESTAMP AS "_etl_valid_from"
-                FROM exploded
-            )
             INSERT INTO {staging_schema}.{table}
-            SELECT DISTINCT ON ("_etl_hashdiff") *
-            FROM hashed
-            ORDER BY "_etl_hashdiff"
+            SELECT 
+                {select_expr},
+                %s AS "_etl_run_id",
+                CURRENT_TIMESTAMP AS "_etl_valid_from"
+            FROM {raw_schema}.{raw_table} src
         """).format(
             staging_schema=sql.Identifier(staging_schema),
             table=sql.Identifier(table),
             select_expr=sql.SQL(select_expr),
-            hashdiff_expr=sql.SQL(hashdiff_expr),
             raw_schema=sql.Identifier(raw_schema),
             raw_table=sql.Identifier(f"raw_{table}"),
         )
-
+        logger.error(f"========== SQL Query for {table_name} ==========")
+        logger.error(query.as_string(conn))
         cur.execute(query, (run_id,))
         rows_inserted = cur.rowcount
 
-        logger.info(
-            "RAW to STAGING loaded",
-            table=table_name,
-            physical=table,
-            rows=rows_inserted,
-            mode=load_mode,
-        )
-
+        logger.info("RAW to STAGING loaded", table=table_name, rows=rows_inserted, mode=load_mode)
         return rows_inserted
 
 
@@ -250,11 +213,11 @@ def build_select_with_extent_and_cast(
     """
     Construire SELECT RAW → STAGING
     
-    RAW a déjà les types stricts SAUF pour EXTENT (qui sont TEXT avec ';')
+    RAW est maintenant TOUT EN TEXT (données brutes)
     
     Logique:
     - EXTENT: split_part() + cast
-    - Normal: copie directe (RAW a déjà le bon type)
+    - Normal: cast depuis TEXT vers type strict
     """
     select_parts = []
     
@@ -274,29 +237,52 @@ def build_select_with_extent_and_cast(
                         f'NULLIF(TRIM(split_part({source_alias}."{col_name}", \';\', {i})), \'\')::{element_type} '
                         f'AS "{target_col}"'
                     )
-                elif element_type == "BOOLEAN":
+                elif element_type.upper() in ["BOOLEAN", "BIT", "LOGICAL"]:
                     select_parts.append(
-                        f'CASE WHEN LOWER(TRIM(split_part({source_alias}."{col_name}", \';\', {i}))) '
-                        f'IN (\'true\', \'1\', \'yes\', \'t\') THEN TRUE '
-                        f'WHEN LOWER(TRIM(split_part({source_alias}."{col_name}", \';\', {i}))) '
-                        f'IN (\'false\', \'0\', \'no\', \'f\', \'\') THEN FALSE '
+                        f'CASE '
+                        f'WHEN LOWER(TRIM(split_part({source_alias}."{col_name}", \';\', {i}))) IN (\'true\', \'t\', \'1\', \'yes\') THEN TRUE '
+                        f'WHEN LOWER(TRIM(split_part({source_alias}."{col_name}", \';\', {i}))) IN (\'false\', \'f\', \'0\', \'no\', \'\') THEN FALSE '
                         f'ELSE NULL END AS "{target_col}"'
                     )
                 elif element_type in ["DATE", "TIMESTAMP"]:
                     select_parts.append(
-                        f'CASE WHEN TRIM(split_part({source_alias}."{col_name}", \';\', {i})) = \'\' '
-                        f'THEN NULL '
-                        f'ELSE TRIM(split_part({source_alias}."{col_name}", \';\', {i}))::{element_type} END '
-                        f'AS "{target_col}"'
+                        f'''CASE 
+                            WHEN TRIM(split_part({source_alias}."{col_name}", ';', {i})) = '' THEN NULL
+                            WHEN TRIM(split_part({source_alias}."{col_name}", ';', {i})) = '?' THEN NULL
+                            WHEN TRIM(split_part({source_alias}."{col_name}", ';', {i})) ~ '^\d{{2}}/\d{{2}}/\d{{4}}$' THEN
+                                TO_DATE(TRIM(split_part({source_alias}."{col_name}", ';', {i})), 'MM/DD/YYYY')::{element_type}
+                            ELSE 
+                                TRIM(split_part({source_alias}."{col_name}", ';', {i}))::{element_type}
+                        END AS "{target_col}"'''
                     )
                 else:  # VARCHAR, TEXT
                     select_parts.append(
                         f'TRIM(split_part({source_alias}."{col_name}", \';\', {i})) AS "{target_col}"'
                     )
         else:
-            # Normal: RAW a déjà le bon type, copie directe
-            select_parts.append(
-                f'{source_alias}."{col_name}"'
-            )
+            # Normal: RAW est TEXT, il faut TOUJOURS caster
+            data_type = col.get("data_type", "TEXT")
+            
+            if data_type.startswith("NUMERIC") or data_type in ["INTEGER", "BIGINT"]:
+                select_parts.append(
+                    f'NULLIF(TRIM({source_alias}."{col_name}"), \'\')::{data_type} AS "{col_name}"'
+                )
+            elif data_type.upper() in ["BOOLEAN", "BIT", "LOGICAL"]:  # ← ✅ CORRIGÉ ICI
+                select_parts.append(
+                    f'CASE '
+                    f'WHEN LOWER(TRIM({source_alias}."{col_name}")) IN (\'true\', \'t\', \'1\', \'yes\') THEN TRUE '
+                    f'WHEN LOWER(TRIM({source_alias}."{col_name}")) IN (\'false\', \'f\', \'0\', \'no\', \'\') THEN FALSE '
+                    f'ELSE NULL END AS "{col_name}"'
+                )
+            elif data_type in ["DATE", "TIMESTAMP"]:
+                select_parts.append(
+                    f'CASE WHEN TRIM({source_alias}."{col_name}") IN (\'\', \'?\') THEN NULL '
+                    f'ELSE TRIM({source_alias}."{col_name}")::{data_type} END AS "{col_name}"'
+                )
+            else:  # TEXT, VARCHAR ou autre type non prévu
+                # CAST QUAND MÊME pour garantir le bon type
+                select_parts.append(
+                    f'NULLIF(TRIM({source_alias}."{col_name}"), \'\')::{data_type} AS "{col_name}"'
+                )
     
     return ",\n    ".join(select_parts)

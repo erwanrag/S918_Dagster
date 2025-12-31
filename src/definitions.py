@@ -17,10 +17,10 @@ from src.jobs.pipelines import (
 from src.jobs.auxiliary import (
     maintenance_cleanup_job,
     maintenance_heavy_job,
-    metadata_import_job,
-    maintenance_schedule,
-    heavy_maintenance_schedule,
-    metadata_import_schedule,
+    metadata_import_job
+    # maintenance_schedule,
+    # heavy_maintenance_schedule,
+    # metadata_import_schedule,
 )
 from src.schedules.etl_schedules import (
     production_schedule,
@@ -73,11 +73,11 @@ definitions = Definitions(
         services_schedule,             # 0 3 * * * (3h du matin)
         
         # Maintenance
-        maintenance_schedule,          # 0 4 1 * * (1er du mois à 4h)
-        heavy_maintenance_schedule,    # 0 3 1 */3 * (trimestriel)
+        # maintenance_schedule,          # 0 4 1 * * (1er du mois à 4h)
+        # heavy_maintenance_schedule,    # 0 3 1 */3 * (trimestriel)
         
-        # Metadata
-        metadata_import_schedule,      # 0 8 * * * (8h du matin)
+        # # Metadata
+        # metadata_import_schedule,      # 0 8 * * * (8h du matin)
     ],
     
     sensors=[],  # Pas de sensors, 100% schedules
