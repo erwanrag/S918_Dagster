@@ -1,0 +1,726 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Data Quality Report - client</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .header { background: #f0f0f0; padding: 20px; border-radius: 5px; }
+        .summary { margin: 20px 0; }
+        .passed { color: green; font-weight: bold; }
+        .failed { color: red; font-weight: bold; }
+        table { border-collapse: collapse; width: 100%; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #4CAF50; color: white; }
+        .error { background-color: #ffebee; }
+        .warning { background-color: #fff3e0; }
+        .info { background-color: #e3f2fd; }
+        pre { background: #f5f5f5; padding: 10px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Data Quality Report</h1>
+        <p><strong>Table:</strong> client</p>
+        <p><strong>File:</strong> /data/sftp_cbmdata01/Incoming/data/parquet/client_20251231_143837.parquet</p>
+        <p><strong>Scan Time:</strong> 2025-12-31T14:41:21.596841</p>
+        <p><strong>Status:</strong> <span class="passed">
+            ✅ PASSED
+        </span></p>
+    </div>
+    
+    <div class="summary">
+        <h2>Summary</h2>
+        <ul>
+            <li>Total Rows: 10,000</li>
+            <li>Total Columns: 219</li>
+            <li>Issues Found: 99</li>
+            <li>Errors: 0</li>
+            <li>Warnings: 74</li>
+        </ul>
+    </div>
+<h2>Issues by Type</h2><h3>Unescaped Quotes (10 occurrences)</h3><table><tr><th>Row</th><th>Column</th><th>Severity</th><th>Sample Value</th><th>Suggestion</th></tr>
+                <tr class="warning">
+                    <td>521</td>
+                    <td>com_sta</td>
+                    <td>WARNING</td>
+                    <td><pre>voir COM005 "racheté par REUNIR"</pre></td>
+                    <td>Guillemets seront automatiquement échappés lors du chargement</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>1681</td>
+                    <td>edt_bp</td>
+                    <td>WARNING</td>
+                    <td><pre>Paiement par avance sur notre compte de la bro
+n° 30047 14850 00014330001 78 pour expedition de
+la m...</pre></td>
+                    <td>Guillemets seront automatiquement échappés lors du chargement</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>154</td>
+                    <td>adresse</td>
+                    <td>WARNING</td>
+                    <td><pre>"Z.A. ""LES FROMENTAUX""";B.P. 3;</pre></td>
+                    <td>Guillemets seront automatiquement échappés lors du chargement</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>1889</td>
+                    <td>adresse</td>
+                    <td>WARNING</td>
+                    <td><pre>C/SESENTA, 21-23;"SECTOR ""A"" PG ZONA FRANCA";</pre></td>
+                    <td>Guillemets seront automatiquement échappés lors du chargement</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>2051</td>
+                    <td>adresse</td>
+                    <td>WARNING</td>
+                    <td><pre>55 ROUTE NATIONALE;"PRATZ";</pre></td>
+                    <td>Guillemets seront automatiquement échappés lors du chargement</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>2075</td>
+                    <td>adresse</td>
+                    <td>WARNING</td>
+                    <td><pre>1 RUE PIERRE ET MARIE CURIE;ZA "LES PORTES DE L'ANJOU";</pre></td>
+                    <td>Guillemets seront automatiquement échappés lors du chargement</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>4777</td>
+                    <td>adresse</td>
+                    <td>WARNING</td>
+                    <td><pre>OMNIBUSBETRIEB "WILMERSDORFER";ORDENSMEISTERSTRASSE 36-38;</pre></td>
+                    <td>Guillemets seront automatiquement échappés lors du chargement</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>7583</td>
+                    <td>adresse</td>
+                    <td>WARNING</td>
+                    <td><pre>C/SESENTA , 21.23;SECTOR "A"-PG ZONA FRANCA;</pre></td>
+                    <td>Guillemets seront automatiquement échappés lors du chargement</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>7652</td>
+                    <td>adresse</td>
+                    <td>WARNING</td>
+                    <td><pre>PARQUE INDUSTRIAL;"EL POLIGONO ";C/ RIO ARBA,24-26</pre></td>
+                    <td>Guillemets seront automatiquement échappés lors du chargement</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>8158</td>
+                    <td>adresse</td>
+                    <td>WARNING</td>
+                    <td><pre>POLIGONO I. "EL PABELLON";PARCELA,1.10;</pre></td>
+                    <td>Guillemets seront automatiquement échappés lors du chargement</td>
+                </tr>
+                </table><h3>Control Characters (64 occurrences)</h3><table><tr><th>Row</th><th>Column</th><th>Severity</th><th>Sample Value</th><th>Suggestion</th></tr>
+                <tr class="warning">
+                    <td>18</td>
+                    <td>edt_bp</td>
+                    <td>WARNING</td>
+                    <td><pre>'FACTURER LE PORT\nGroupe Renault trucks'</pre></td>
+                    <td>Caractères de contrôle seront remplacés par des espaces</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>70</td>
+                    <td>edt_bp</td>
+                    <td>WARNING</td>
+                    <td><pre>'EN CONTRE-REMBOURSEMENT\nFACTURER LE PORT'</pre></td>
+                    <td>Caractères de contrôle seront remplacés par des espaces</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>376</td>
+                    <td>edt_bp</td>
+                    <td>WARNING</td>
+                    <td><pre>'PAIEMENT : VIREMENT A 30 JOURS FIN DE MOIS\nIBAN : FR 76 3004'</pre></td>
+                    <td>Caractères de contrôle seront remplacés par des espaces</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>488</td>
+                    <td>edt_bp</td>
+                    <td>WARNING</td>
+                    <td><pre>'FACTURER LE PORT\nNE PAS METTRE LE BON DE LIVRAISON DANS LE C'</pre></td>
+                    <td>Caractères de contrôle seront remplacés par des espaces</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>523</td>
+                    <td>edt_bp</td>
+                    <td>WARNING</td>
+                    <td><pre>'LIVRAISON EN CONTRE REMBOURSEMENT\nDEMANDER COMMANDE ECRITE\nNE PAS ACCEPTER LES COMMANDES TELEPHONIQU'</pre></td>
+                    <td>Caractères de contrôle seront remplacés par des espaces</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>626</td>
+                    <td>edt_bp</td>
+                    <td>WARNING</td>
+                    <td><pre>'POUR LES COLIS DE +30KG CALBERSON EXPRESS\nPREVOIR CAMION AVEC HAYON'</pre></td>
+                    <td>Caractères de contrôle seront remplacés par des espaces</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>643</td>
+                    <td>edt_bp</td>
+                    <td>WARNING</td>
+                    <td><pre>'FACTURER LE PORT\nMINI 50 EUROS'</pre></td>
+                    <td>Caractères de contrôle seront remplacés par des espaces</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>644</td>
+                    <td>edt_bp</td>
+                    <td>WARNING</td>
+                    <td><pre>'FACTURER LE PORT\nMINI 50 EUROS'</pre></td>
+                    <td>Caractères de contrôle seront remplacés par des espaces</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>645</td>
+                    <td>edt_bp</td>
+                    <td>WARNING</td>
+                    <td><pre>' FACTURER LE PORT\nMINI 50 EUROS'</pre></td>
+                    <td>Caractères de contrôle seront remplacés par des espaces</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>646</td>
+                    <td>edt_bp</td>
+                    <td>WARNING</td>
+                    <td><pre>'FACTURER LE PORT\nMINI 50 EUROS\nINDIQUER LE N° DE COMMANDE'</pre></td>
+                    <td>Caractères de contrôle seront remplacés par des espaces</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>647</td>
+                    <td>edt_bp</td>
+                    <td>WARNING</td>
+                    <td><pre>'FACTURER LE PORT\nMINI 50 EUROS'</pre></td>
+                    <td>Caractères de contrôle seront remplacés par des espaces</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>659</td>
+                    <td>edt_bp</td>
+                    <td>WARNING</td>
+                    <td><pre>"LIVRAISON DEPART USINE/ PAYS D'ORIGINE : CEE / \nPAIEMENT : v"</pre></td>
+                    <td>Caractères de contrôle seront remplacés par des espaces</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>718</td>
+                    <td>edt_bp</td>
+                    <td>WARNING</td>
+                    <td><pre>'FACTURER LE PORT\nFAIRE OFFRE DE PRIX AVEC PORT POUR OBTENIR'</pre></td>
+                    <td>Caractères de contrôle seront remplacés par des espaces</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>785</td>
+                    <td>edt_bp</td>
+                    <td>WARNING</td>
+                    <td><pre>'LIVRAISON IMPERATIVE EN CONTRE REMBOURSEMENT MERCI\n========='</pre></td>
+                    <td>Caractères de contrôle seront remplacés par des espaces</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>808</td>
+                    <td>edt_bp</td>
+                    <td>WARNING</td>
+                    <td><pre>'FACTURER LE PORT\nle 040607 livraison en contre remboursement'</pre></td>
+                    <td>Caractères de contrôle seront remplacés par des espaces</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>819</td>
+                    <td>edt_bp</td>
+                    <td>WARNING</td>
+                    <td><pre>'FACTURER LE PORT\n******  ATTENTION !!!  FACTURER LE PORT  **'</pre></td>
+                    <td>Caractères de contrôle seront remplacés par des espaces</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>820</td>
+                    <td>edt_bp</td>
+                    <td>WARNING</td>
+                    <td><pre>'FACTURER LE PORT\n******  ATTENTION !!!! FACTURER LE PORT  **'</pre></td>
+                    <td>Caractères de contrôle seront remplacés par des espaces</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>858</td>
+                    <td>edt_bp</td>
+                    <td>WARNING</td>
+                    <td><pre>'============================================================\nLIVRAISON EN CONTRE REMBOURSEMENT IMPER'</pre></td>
+                    <td>Caractères de contrôle seront remplacés par des espaces</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>874</td>
+                    <td>edt_bp</td>
+                    <td>WARNING</td>
+                    <td><pre>'============================================================\nLIVRAISON EN CONTRE REMBOURSEMENT IMPER'</pre></td>
+                    <td>Caractères de contrôle seront remplacés par des espaces</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>1028</td>
+                    <td>edt_bp</td>
+                    <td>WARNING</td>
+                    <td><pre>'FACTURER LE PORT\nNE PAS PRENDRE DE COMMANDE TELEPHONIQUE'</pre></td>
+                    <td>Caractères de contrôle seront remplacés par des espaces</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>1146</td>
+                    <td>edt_bp</td>
+                    <td>WARNING</td>
+                    <td><pre>'NE PAS METTRE DE STOCK CBM\nNE PAS ENVOYER LE BL SI LIVRAISON'</pre></td>
+                    <td>Caractères de contrôle seront remplacés par des espaces</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>1156</td>
+                    <td>edt_bp</td>
+                    <td>WARNING</td>
+                    <td><pre>"LIVRAISON DEPART USINE/ PAYS D'ORIGINE : CEE/ \nPAIEMENT: vir"</pre></td>
+                    <td>Caractères de contrôle seront remplacés par des espaces</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>1186</td>
+                    <td>edt_bp</td>
+                    <td>WARNING</td>
+                    <td><pre>'NE PAS FACTURER LE PORT\nUniquement Calberson'</pre></td>
+                    <td>Caractères de contrôle seront remplacés par des espaces</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>1226</td>
+                    <td>edt_bp</td>
+                    <td>WARNING</td>
+                    <td><pre>'============================================================\nLivraison en contre remboursement imper'</pre></td>
+                    <td>Caractères de contrôle seront remplacés par des espaces</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>1235</td>
+                    <td>edt_bp</td>
+                    <td>WARNING</td>
+                    <td><pre>"LIVRAISON DEPART USINE/ PAYS D'ORIGINE : CEE/ \nPAIEMENT : VIREMENT BANCAIRE AVANT EXPEDITION\nIBAN : "</pre></td>
+                    <td>Caractères de contrôle seront remplacés par des espaces</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>1259</td>
+                    <td>edt_bp</td>
+                    <td>WARNING</td>
+                    <td><pre>'attention faire partir les commandes en tnt\néviter le calber'</pre></td>
+                    <td>Caractères de contrôle seront remplacés par des espaces</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>1283</td>
+                    <td>edt_bp</td>
+                    <td>WARNING</td>
+                    <td><pre>"FACTURER LE PORT\nATTENTION A L'ADRESSE DE LIVRAISON : PREVEN"</pre></td>
+                    <td>Caractères de contrôle seront remplacés par des espaces</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>1284</td>
+                    <td>edt_bp</td>
+                    <td>WARNING</td>
+                    <td><pre>"FACTURER LE PORT\nATTENTION A L'ADRESSE DE LIVRAISON : PREVEN"</pre></td>
+                    <td>Caractères de contrôle seront remplacés par des espaces</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>1285</td>
+                    <td>edt_bp</td>
+                    <td>WARNING</td>
+                    <td><pre>"FACTURER LE PORT\nATTENTION A L'ADRESSE DE LIVRAISON : PREVEN"</pre></td>
+                    <td>Caractères de contrôle seront remplacés par des espaces</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>1286</td>
+                    <td>edt_bp</td>
+                    <td>WARNING</td>
+                    <td><pre>"FACTURER LE PORT\nATTENTION A L'ADRESSE DE LIVRAISON : PREVEN"</pre></td>
+                    <td>Caractères de contrôle seront remplacés par des espaces</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>1287</td>
+                    <td>edt_bp</td>
+                    <td>WARNING</td>
+                    <td><pre>"FACTURER LE PORT POUR TRANSPORT EN EXPRESS\nATTENTION A L'ADR"</pre></td>
+                    <td>Caractères de contrôle seront remplacés par des espaces</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>1288</td>
+                    <td>edt_bp</td>
+                    <td>WARNING</td>
+                    <td><pre>"FACTURER LE PORT\nATTENTION A L'ADRESSE DE LIVRAISON : PREVEN"</pre></td>
+                    <td>Caractères de contrôle seront remplacés par des espaces</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>1386</td>
+                    <td>edt_bp</td>
+                    <td>WARNING</td>
+                    <td><pre>'PAIEMENT PAR VIREMENT SUR BRO AVANT EXPEDITION DES PIECES\nPR'</pre></td>
+                    <td>Caractères de contrôle seront remplacés par des espaces</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>1502</td>
+                    <td>edt_bp</td>
+                    <td>WARNING</td>
+                    <td><pre>'++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nNE PAS ENVOYER LES PIECES SANS N° DE CO'</pre></td>
+                    <td>Caractères de contrôle seront remplacés par des espaces</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>1505</td>
+                    <td>edt_bp</td>
+                    <td>WARNING</td>
+                    <td><pre>"ATTENTION A L'ADRESSE DE LIVRAISON DES RELIQUATS : NE PAS\nME"</pre></td>
+                    <td>Caractères de contrôle seront remplacés par des espaces</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>1572</td>
+                    <td>edt_bp</td>
+                    <td>WARNING</td>
+                    <td><pre>'pour les PB, camion avec bache sur le côté\nCHRONOPOST INTERDIT'</pre></td>
+                    <td>Caractères de contrôle seront remplacés par des espaces</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>1655</td>
+                    <td>edt_bp</td>
+                    <td>WARNING</td>
+                    <td><pre>"LIVRAISON DEPART USINE/ PAYS D'ORIGINE : CEE/ \nPAIEMENT : VIREMENT A 30 JOURS FIN DE MOIS\nIBAN : FR "</pre></td>
+                    <td>Caractères de contrôle seront remplacés par des espaces</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>1674</td>
+                    <td>edt_bp</td>
+                    <td>WARNING</td>
+                    <td><pre>'A EXPEDIER. PAS DE DB SCHENKER\n1KIT=1 CARTON'</pre></td>
+                    <td>Caractères de contrôle seront remplacés par des espaces</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>1681</td>
+                    <td>edt_bp</td>
+                    <td>WARNING</td>
+                    <td><pre>'Paiement par avance sur notre compte de la bro\nn° 30047 14850 00014330001 78 pour expedition de\nla m'</pre></td>
+                    <td>Caractères de contrôle seront remplacés par des espaces</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>1714</td>
+                    <td>edt_bp</td>
+                    <td>WARNING</td>
+                    <td><pre>"LIVRAISON DEPART USINE/ PAYS D'ORIGINE : CEE/ \nPAIEMENT : REMISE DOCUMENTAIRE\nIBAN : FR 76 3004 7148"</pre></td>
+                    <td>Caractères de contrôle seront remplacés par des espaces</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>1737</td>
+                    <td>edt_bp</td>
+                    <td>WARNING</td>
+                    <td><pre>"LIVRAISON DEPART USINE/ PAYS D'ORIGINE : CEE/ \nPAIEMENT : VIREMENT BANCAIRE AVANT EXPEDITION\nIBAN : "</pre></td>
+                    <td>Caractères de contrôle seront remplacés par des espaces</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>1786</td>
+                    <td>edt_bp</td>
+                    <td>WARNING</td>
+                    <td><pre>"LIVRAISON DEPART USINE/ PAYS D'ORIGINE : CEE/ \nPAIEMENT : VIREMENT A 30 JOURS FIN DE MOIS\nIBAN : FR "</pre></td>
+                    <td>Caractères de contrôle seront remplacés par des espaces</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>1817</td>
+                    <td>edt_bp</td>
+                    <td>WARNING</td>
+                    <td><pre>'FACTURER LE PORT\nEN CONTRE REMBOURSEMENT !!'</pre></td>
+                    <td>Caractères de contrôle seront remplacés par des espaces</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>1899</td>
+                    <td>edt_bp</td>
+                    <td>WARNING</td>
+                    <td><pre>'OUVERT DE 7H45 A 11H45\nESTAMPILLAGE CBM OBLIGATOIRE .VITRAGE CAISSE BOIS COMMANDE U'</pre></td>
+                    <td>Caractères de contrôle seront remplacés par des espaces</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>2010</td>
+                    <td>edt_bp</td>
+                    <td>WARNING</td>
+                    <td><pre>'FACTURER LE PORT\nConcessionnaire Irisbus'</pre></td>
+                    <td>Caractères de contrôle seront remplacés par des espaces</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>2017</td>
+                    <td>edt_bp</td>
+                    <td>WARNING</td>
+                    <td><pre>'ne pas facturer le port\n*******LIVRAISON IMPERATIVE EN CONTRE-REMBOURSEMENT*********'</pre></td>
+                    <td>Caractères de contrôle seront remplacés par des espaces</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>2083</td>
+                    <td>edt_bp</td>
+                    <td>WARNING</td>
+                    <td><pre>'attention faire partir les commandes en tnt\néviter le calber'</pre></td>
+                    <td>Caractères de contrôle seront remplacés par des espaces</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>2111</td>
+                    <td>edt_bp</td>
+                    <td>WARNING</td>
+                    <td><pre>'Une livraison en tautliner est à privilégier.\nLa remorque doit être muni d’une bâche coulissante \n'</pre></td>
+                    <td>Caractères de contrôle seront remplacés par des espaces</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>2127</td>
+                    <td>edt_bp</td>
+                    <td>WARNING</td>
+                    <td><pre>'PR CHQ EXP METTRE UN CERTIFICAT  Francesca Roberta AS\nJOINDRE FACTURE CHAQUE ENVOI -> Appeler Anais '</pre></td>
+                    <td>Caractères de contrôle seront remplacés par des espaces</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>2310</td>
+                    <td>edt_bp</td>
+                    <td>WARNING</td>
+                    <td><pre>'MARCHANDISE CERTIFIEE CONFORME AUX NORMES INTERNATIONALES\nPa'</pre></td>
+                    <td>Caractères de contrôle seront remplacés par des espaces</td>
+                </tr>
+                <tr><td colspan='5'><em>... and 14 more</em></td></tr></table><h3>Delimiter In Data (25 occurrences)</h3><table><tr><th>Row</th><th>Column</th><th>Severity</th><th>Sample Value</th><th>Suggestion</th></tr>
+                <tr class="info">
+                    <td>N/A</td>
+                    <td>zal</td>
+                    <td>INFO</td>
+                    <td><pre>10000 rows contain ';'</pre></td>
+                    <td>Colonne contient le délimiteur ";" (géré automatiquement)</td>
+                </tr>
+                
+                <tr class="info">
+                    <td>N/A</td>
+                    <td>znu</td>
+                    <td>INFO</td>
+                    <td><pre>10000 rows contain ';'</pre></td>
+                    <td>Colonne contient le délimiteur ";" (géré automatiquement)</td>
+                </tr>
+                
+                <tr class="info">
+                    <td>N/A</td>
+                    <td>zta</td>
+                    <td>INFO</td>
+                    <td><pre>10000 rows contain ';'</pre></td>
+                    <td>Colonne contient le délimiteur ";" (géré automatiquement)</td>
+                </tr>
+                
+                <tr class="info">
+                    <td>N/A</td>
+                    <td>div_fac</td>
+                    <td>INFO</td>
+                    <td><pre>10000 rows contain ';'</pre></td>
+                    <td>Colonne contient le délimiteur ";" (géré automatiquement)</td>
+                </tr>
+                
+                <tr class="info">
+                    <td>N/A</td>
+                    <td>val_fac</td>
+                    <td>INFO</td>
+                    <td><pre>10000 rows contain ';'</pre></td>
+                    <td>Colonne contient le délimiteur ";" (géré automatiquement)</td>
+                </tr>
+                
+                <tr class="info">
+                    <td>N/A</td>
+                    <td>fam_art</td>
+                    <td>INFO</td>
+                    <td><pre>10000 rows contain ';'</pre></td>
+                    <td>Colonne contient le délimiteur ";" (géré automatiquement)</td>
+                </tr>
+                
+                <tr class="info">
+                    <td>N/A</td>
+                    <td>mnt_rlk</td>
+                    <td>INFO</td>
+                    <td><pre>10000 rows contain ';'</pre></td>
+                    <td>Colonne contient le délimiteur ";" (géré automatiquement)</td>
+                </tr>
+                
+                <tr class="info">
+                    <td>N/A</td>
+                    <td>commerc</td>
+                    <td>INFO</td>
+                    <td><pre>10000 rows contain ';'</pre></td>
+                    <td>Colonne contient le délimiteur ";" (géré automatiquement)</td>
+                </tr>
+                
+                <tr class="info">
+                    <td>N/A</td>
+                    <td>rem_glo</td>
+                    <td>INFO</td>
+                    <td><pre>10000 rows contain ';'</pre></td>
+                    <td>Colonne contient le délimiteur ";" (géré automatiquement)</td>
+                </tr>
+                
+                <tr class="info">
+                    <td>N/A</td>
+                    <td>arr_bi</td>
+                    <td>INFO</td>
+                    <td><pre>10000 rows contain ';'</pre></td>
+                    <td>Colonne contient le délimiteur ";" (géré automatiquement)</td>
+                </tr>
+                
+                <tr class="info">
+                    <td>N/A</td>
+                    <td>arr_bs</td>
+                    <td>INFO</td>
+                    <td><pre>10000 rows contain ';'</pre></td>
+                    <td>Colonne contient le délimiteur ";" (géré automatiquement)</td>
+                </tr>
+                
+                <tr class="info">
+                    <td>N/A</td>
+                    <td>arr_r</td>
+                    <td>INFO</td>
+                    <td><pre>10000 rows contain ';'</pre></td>
+                    <td>Colonne contient le délimiteur ";" (géré automatiquement)</td>
+                </tr>
+                
+                <tr class="info">
+                    <td>N/A</td>
+                    <td>zlo</td>
+                    <td>INFO</td>
+                    <td><pre>10000 rows contain ';'</pre></td>
+                    <td>Colonne contient le délimiteur ";" (géré automatiquement)</td>
+                </tr>
+                
+                <tr class="info">
+                    <td>N/A</td>
+                    <td>int_rrr</td>
+                    <td>INFO</td>
+                    <td><pre>10000 rows contain ';'</pre></td>
+                    <td>Colonne contient le délimiteur ";" (géré automatiquement)</td>
+                </tr>
+                
+                <tr class="info">
+                    <td>N/A</td>
+                    <td>ben_rrr</td>
+                    <td>INFO</td>
+                    <td><pre>10000 rows contain ';'</pre></td>
+                    <td>Colonne contient le délimiteur ";" (géré automatiquement)</td>
+                </tr>
+                
+                <tr class="info">
+                    <td>N/A</td>
+                    <td>interv</td>
+                    <td>INFO</td>
+                    <td><pre>10000 rows contain ';'</pre></td>
+                    <td>Colonne contient le délimiteur ";" (géré automatiquement)</td>
+                </tr>
+                
+                <tr class="info">
+                    <td>N/A</td>
+                    <td>f_verifcde</td>
+                    <td>INFO</td>
+                    <td><pre>10000 rows contain ';'</pre></td>
+                    <td>Colonne contient le délimiteur ";" (géré automatiquement)</td>
+                </tr>
+                
+                <tr class="info">
+                    <td>N/A</td>
+                    <td>qui_stn</td>
+                    <td>INFO</td>
+                    <td><pre>10000 rows contain ';'</pre></td>
+                    <td>Colonne contient le délimiteur ";" (géré automatiquement)</td>
+                </tr>
+                
+                <tr class="info">
+                    <td>N/A</td>
+                    <td>interloc</td>
+                    <td>INFO</td>
+                    <td><pre>10000 rows contain ';'</pre></td>
+                    <td>Colonne contient le délimiteur ";" (géré automatiquement)</td>
+                </tr>
+                
+                <tr class="info">
+                    <td>N/A</td>
+                    <td>adresse</td>
+                    <td>INFO</td>
+                    <td><pre>10000 rows contain ';'</pre></td>
+                    <td>Colonne contient le délimiteur ";" (géré automatiquement)</td>
+                </tr>
+                
+                <tr class="info">
+                    <td>N/A</td>
+                    <td>tar_fil</td>
+                    <td>INFO</td>
+                    <td><pre>10000 rows contain ';'</pre></td>
+                    <td>Colonne contient le délimiteur ";" (géré automatiquement)</td>
+                </tr>
+                
+                <tr class="info">
+                    <td>N/A</td>
+                    <td>tar_cum</td>
+                    <td>INFO</td>
+                    <td><pre>10000 rows contain ';'</pre></td>
+                    <td>Colonne contient le délimiteur ";" (géré automatiquement)</td>
+                </tr>
+                
+                <tr class="info">
+                    <td>N/A</td>
+                    <td>tar_fi2</td>
+                    <td>INFO</td>
+                    <td><pre>10000 rows contain ';'</pre></td>
+                    <td>Colonne contient le délimiteur ";" (géré automatiquement)</td>
+                </tr>
+                
+                <tr class="info">
+                    <td>N/A</td>
+                    <td>tar_cu2</td>
+                    <td>INFO</td>
+                    <td><pre>10000 rows contain ';'</pre></td>
+                    <td>Colonne contient le délimiteur ";" (géré automatiquement)</td>
+                </tr>
+                
+                <tr class="info">
+                    <td>N/A</td>
+                    <td>hr_app</td>
+                    <td>INFO</td>
+                    <td><pre>10000 rows contain ';'</pre></td>
+                    <td>Colonne contient le délimiteur ";" (géré automatiquement)</td>
+                </tr>
+                </table>
+</body>
+</html>

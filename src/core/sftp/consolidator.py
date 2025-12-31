@@ -1,5 +1,6 @@
 """
 Consolidation intelligente selon load_mode
+FIX: Exemption pour tables avec multiples config_name (comme lisval)
 """
 from pathlib import Path
 from datetime import datetime
@@ -9,27 +10,42 @@ from src.config.settings import get_settings
 
 settings = get_settings()
 
+# ✅ Tables à exempter de consolidation (multiples configs)
+MULTI_CONFIG_TABLES = {'lisval'}  # Tables qui ont plusieurs config_name
+
+
 def handle_duplicate_files(
     table_name: str,
     file_list: list,  # Liste de SftpFile objects
     consolidated_dir: Path,
     superseded_dir: Path,
     logger
-) -> dict:
+) -> list:  # ✅ Retourne liste au lieu de dict pour multi-config
     """
     Gérer fichiers multiples selon load_mode
     
     Strategy:
+    - Tables multi-config (lisval) → Retourner TOUS les fichiers séparément
     - FULL/FULL_RESET → Garder dernier, archiver le reste
     - INCREMENTAL → Consolider tous les fichiers
     
     Returns:
-        dict avec le fichier à charger
+        list de fichiers à charger (peut contenir plusieurs fichiers pour multi-config)
     """
     if len(file_list) == 1:
-        return file_list[0]
+        return [file_list[0]]  # ✅ Retourner liste
     
-    # ✅ Trier par extraction_date (pas modified_time)
+    # =====================================================================
+    # CAS SPÉCIAL : Tables avec multiples config_name
+    # =====================================================================
+    if table_name in MULTI_CONFIG_TABLES:
+        logger.info(
+            f"{table_name}: Multi-config table, processing {len(file_list)} files separately"
+        )
+        # ✅ Retourner TOUS les fichiers sans consolidation
+        return file_list
+    
+    # ✅ Trier par extraction_date
     sorted_files = sorted(file_list, key=lambda x: x.extraction_date)
     
     last_file = sorted_files[-1]
@@ -50,7 +66,7 @@ def handle_duplicate_files(
         # Archiver les anciens
         _archive_old_files(old_files, superseded_dir, logger)
         
-        return last_file
+        return [last_file]  # ✅ Retourner liste
     
     # =====================================================================
     # CAS 2 : INCREMENTAL → Consolider tous les fichiers
@@ -105,18 +121,18 @@ def handle_duplicate_files(
         consolidated_status
     )
     
-    # ✅ Retourner dict avec extraction_date
-    return {
+    # ✅ Retourner liste avec dict
+    return [{
         'path': consolidated_path,
         'table_name': table_name,
         'physical_name': last_file.physical_name,
         'load_mode': 'INCREMENTAL',
-        'extraction_date': last_file.extraction_date,  # ✅ Pas modified_time
+        'extraction_date': last_file.extraction_date,
         'metadata': consolidated_metadata,
         'status': consolidated_status,
-        'columns': last_file.columns,  # ✅ Ajouter columns
-        'original_files': sorted_files  # ✅ Pour archivage
-    }
+        'columns': last_file.columns,
+        'original_files': sorted_files
+    }]
 
 
 def _archive_old_files(file_list: list, superseded_dir: Path, logger):

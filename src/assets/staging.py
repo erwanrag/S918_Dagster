@@ -2,8 +2,7 @@
 ============================================================================
 Assets STAGING - RAW → STAGING avec éclatement EXTENT
 ============================================================================
-Transformation des colonnes EXTENT (TEXT) en colonnes multiples (TEXT)
-Exemple: zal ("AAA;;;;") → zal_1 ("AAA"), zal_2 (""), zal_3 (""), ...
+FIX: Utilise config_name pour chercher metadata (pour tables lisval)
 ============================================================================
 """
 
@@ -55,6 +54,7 @@ def staging_tables(
     # ✅ BOUCLE FOR
     for table_info in raw_sftp_tables["results"]:
         table_name = table_info["table"]
+        config_name = table_info.get("config_name")  # ✅ RÉCUPÉRER config_name
         physical_name = table_info.get("physical_name", table_name)
         load_mode = table_info.get("mode", "FULL")
         
@@ -73,10 +73,10 @@ def staging_tables(
             )
             conn.autocommit = False
             
-            # Récupérer métadonnées
-            metadata = get_table_metadata(conn, table_name)
+            # ✅ Récupérer métadonnées avec config_name si présent
+            metadata = get_table_metadata(conn, table_name, config_name=config_name)
             if not metadata:
-                context.log.warning(f"No metadata found for {table_name}, skipping")
+                context.log.warning(f"No metadata found for {table_name} (config: {config_name}), skipping")
                 conn.rollback()
                 conn.close()
                 continue
@@ -94,13 +94,14 @@ def staging_tables(
             # ✅ FONCTION RETRY
             @retry(stop=stop_after_attempt(2), wait=wait_fixed(3))
             def process_table_with_retry():
-                create_staging_table(table_name, load_mode, conn)
+                create_staging_table(table_name, load_mode, conn, config_name=config_name)
                 return load_raw_to_staging(
                     table_name=table_name,
                     physical_name=physical_name,
                     run_id=run_id,
                     load_mode=load_mode,
-                    conn=conn
+                    conn=conn,
+                    config_name=config_name  # ✅ Passer config_name
                 )
             
             # Exécuter avec retry
@@ -115,6 +116,7 @@ def staging_tables(
             
             results.append({
                 "table": table_name,
+                "config_name": config_name,  # ✅ Inclure config_name
                 "physical_name": physical_name,
                 "rows": rows,
                 "mode": load_mode,
@@ -135,7 +137,7 @@ def staging_tables(
             )
             continue
             
-        except Exception as e:  # ✅ BON NIVEAU D'INDENTATION
+        except Exception as e:
             if conn:
                 conn.rollback()
                 conn.close()

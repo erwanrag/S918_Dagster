@@ -28,7 +28,7 @@ class Schema(str, Enum):
     """Schémas PostgreSQL"""
 
     RAW = "raw"
-    STAGING = "staging_etl"
+    STAGING = "staging"
     ODS = "ods"
     PREP = "prep"
     METADATA = "metadata"

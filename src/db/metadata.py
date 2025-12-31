@@ -2,6 +2,8 @@
 ============================================================================
 Metadata Helper - Accès aux métadonnées des tables
 ============================================================================
+FIX: Ajout du paramètre config_name pour supporter les tables multi-config
+============================================================================
 """
 
 from typing import Any
@@ -13,14 +15,26 @@ from src.utils.logging import get_logger
 logger = get_logger(__name__)
 
 
-def get_table_metadata(conn, table_name: str) -> dict[str, Any] | None:
+def get_table_metadata(conn, table_name: str, config_name: str = None) -> dict[str, Any] | None:
     """
     Récupérer les métadonnées d'une table
+    
+    Args:
+        conn: Connexion PostgreSQL
+        table_name: Nom de la table (ex: "lisval", "client")
+        config_name: Configuration spécifique (ex: "lisval_produits_vehicules")
+                     Si fourni, cherche cette config, sinon cherche table_name
+    
+    Returns:
+        Dict avec métadonnées ou None si non trouvé
     """
     with conn.cursor() as cur:
         # ------------------------------------------------------------------
         # Table principale
+        # ✅ Recherche avec config_name si fourni, sinon table_name
         # ------------------------------------------------------------------
+        search_key = config_name if config_name else table_name
+        
         cur.execute(
             sql.SQL("""
                 SELECT 
@@ -34,17 +48,17 @@ def get_table_metadata(conn, table_name: str) -> dict[str, Any] | None:
                   AND "IsActive" = TRUE
                 LIMIT 1
             """).format(sql.Identifier(Schema.METADATA.value)),
-            (table_name,),
+            (search_key,),  # ✅ Utilise search_key au lieu de table_name
         )
 
         row = cur.fetchone()
         if not row:
-            logger.warning("Table metadata not found", table=table_name)
+            logger.warning("Table metadata not found", table=table_name, config=config_name)
             return None
 
         (
             table_name_db,
-            config_name,
+            config_name_db,
             primary_keys_str,
             has_timestamps,
             description,
@@ -91,8 +105,8 @@ def get_table_metadata(conn, table_name: str) -> dict[str, Any] | None:
 
         return {
             "table_name": table_name_db,
-            "config_name": config_name,
-            "physical_name": config_name or table_name_db,
+            "config_name": config_name_db,
+            "physical_name": config_name_db or table_name_db,
             "primary_keys": primary_keys,
             "has_timestamps": has_timestamps or False,
             "force_full": False,  

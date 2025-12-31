@@ -1,6 +1,6 @@
 """
 ============================================================================
-Staging Transformer - Transformation RAW → STAGING
+Staging Transformer - Transformation RAW → STAGING (VERSION CORRIGÉE)
 ============================================================================
 Éclatement des colonnes EXTENT depuis RAW (TEXT) vers STAGING (colonnes typées)
 Exemple: znu (TEXT "123.45;0;0;0;0") → znu_1, znu_2, znu_3, znu_4, znu_5 (NUMERIC)
@@ -27,20 +27,18 @@ def create_staging_table(
     table_name: str,
     load_mode: str,
     conn,
+    config_name: str = None,
 ) -> None:
     """
     Créer ou recréer la table STAGING avec colonnes EXTENT éclatées et typées
-
-    - FULL_RESET: DROP + CREATE
-    - FULL / INCREMENTAL: CREATE IF NOT EXISTS
     
-    En STAGING, les colonnes EXTENT sont éclatées avec typage strict :
-    - RAW : zal TEXT ("AAA;;;;")
-    - STAGING : zal_1 VARCHAR, zal_2 VARCHAR, ...
-    - RAW : znu TEXT ("123.45;0;0;0;0")
-    - STAGING : znu_1 NUMERIC(32,4), znu_2 NUMERIC(32,4), ...
+    Args:
+        table_name: Nom de la table
+        load_mode: Mode de chargement
+        conn: Connexion PostgreSQL
+        config_name: Configuration spécifique (ex: lisval_produits_vehicules)
     """
-    metadata = get_table_metadata(conn, table_name)
+    metadata = get_table_metadata(conn, table_name, config_name=config_name)
     if not metadata:
         raise ValueError(f"Table metadata not found: {table_name}")
 
@@ -155,25 +153,33 @@ def create_staging_table(
 
 def load_raw_to_staging(
     table_name: str,
-    physical_name: str,  # ✅ SEUL AJOUT
+    physical_name: str,
     run_id: str,
     load_mode: str,
     conn,
+    config_name: str = None,
 ) -> int:
     """
     Charger RAW → STAGING avec éclatement EXTENT + cast
-    PAS de hashdiff ici (calculé en ODS)
+    
+    Args:
+        table_name: Nom de la table
+        physical_name: Nom physique (pour les tables RAW)
+        run_id: ID du run ETL
+        load_mode: Mode de chargement
+        conn: Connexion PostgreSQL
+        config_name: Configuration spécifique (ex: lisval_produits_vehicules)
     """
-    metadata = get_table_metadata(conn, table_name)
+    metadata = get_table_metadata(conn, table_name, config_name=config_name)
     if not metadata:
         raise ValueError(f"Table metadata not found: {table_name}")
 
     staging_schema = Schema.STAGING.value
     raw_schema = Schema.RAW.value
     staging_table = metadata["physical_name"].lower()
-    raw_table = f"raw_{physical_name.lower()}"  # ✅ Utiliser physical_name
+    raw_table = f"raw_{physical_name.lower()}"
 
-    # ✅ VÉRIFICATION : Table RAW existe ?
+    # Vérification : Table RAW existe ?
     with conn.cursor() as cur:
         cur.execute("""
             SELECT EXISTS (
@@ -274,15 +280,16 @@ def build_select_with_extent_and_cast(
                         f'ELSE NULL END AS "{target_col}"'
                     )
                 elif element_type in ["DATE", "TIMESTAMP"]:
+                    # ✅ CORRECTION ICI : Pattern regex correct sans doubles accolades
+                    regex_pattern = r'^\d{2}/\d{2}/\d{4}$'
                     select_parts.append(
-                        f'''CASE 
-                            WHEN TRIM(split_part({source_alias}."{col_name}", ';', {i})) = '' THEN NULL
-                            WHEN TRIM(split_part({source_alias}."{col_name}", ';', {i})) = '?' THEN NULL
-                            WHEN TRIM(split_part({source_alias}."{col_name}", ';', {i})) ~ '^\\d{{2}}/\\d{{2}}/\\d{{4}}$' THEN
-                                TO_DATE(TRIM(split_part({source_alias}."{col_name}", ';', {i})), 'MM/DD/YYYY')::{element_type}
-                            ELSE 
-                                TRIM(split_part({source_alias}."{col_name}", ';', {i}))::{element_type}
-                        END AS "{target_col}"'''
+                        f'CASE '
+                        f'WHEN TRIM(split_part({source_alias}."{col_name}", \';\', {i})) = \'\' THEN NULL '
+                        f'WHEN TRIM(split_part({source_alias}."{col_name}", \';\', {i})) = \'?\' THEN NULL '
+                        f'WHEN TRIM(split_part({source_alias}."{col_name}", \';\', {i})) ~ \'{regex_pattern}\' THEN '
+                        f'TO_DATE(TRIM(split_part({source_alias}."{col_name}", \';\', {i})), \'MM/DD/YYYY\')::{element_type} '
+                        f'ELSE TRIM(split_part({source_alias}."{col_name}", \';\', {i}))::{element_type} '
+                        f'END AS "{target_col}"'
                     )
                 else:  # VARCHAR, TEXT
                     select_parts.append(
@@ -307,9 +314,16 @@ def build_select_with_extent_and_cast(
                     f'ELSE NULL END AS "{col_name}"'
                 )
             elif data_type in ["DATE", "TIMESTAMP"]:
+                # ✅ CORRECTION ICI AUSSI : Pattern regex correct
+                regex_pattern = r'^\d{2}/\d{2}/\d{4}$'
                 select_parts.append(
-                    f'CASE WHEN TRIM({source_alias}."{col_name}") IN (\'\', \'?\') THEN NULL '
-                    f'ELSE TRIM({source_alias}."{col_name}")::{data_type} END AS "{col_name}"'
+                    f'CASE '
+                    f'WHEN TRIM({source_alias}."{col_name}") = \'\' THEN NULL '
+                    f'WHEN TRIM({source_alias}."{col_name}") = \'?\' THEN NULL '
+                    f'WHEN TRIM({source_alias}."{col_name}") ~ \'{regex_pattern}\' THEN '
+                    f'TO_DATE(TRIM({source_alias}."{col_name}"), \'MM/DD/YYYY\')::{data_type} '
+                    f'ELSE TRIM({source_alias}."{col_name}")::{data_type} '
+                    f'END AS "{col_name}"'
                 )
             else:  # TEXT, VARCHAR ou autre type non prévu
                 select_parts.append(

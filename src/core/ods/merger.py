@@ -210,6 +210,7 @@ def merge_staging_to_ods(
     run_id: str,
     load_mode: str,
     conn,
+    config_name: str = None,  # ✅ AJOUTER CETTE LIGNE
 ) -> int:
     """
     Merger STAGING → ODS avec SCD2 complet
@@ -218,8 +219,15 @@ def merge_staging_to_ods(
     - INCREMENTAL : Historise les modifications, insère les nouvelles
     - FULL : + Détecte les suppressions (soft delete)
     - FULL_RESET : Réinitialisation complète
+    
+    Args:
+        table_name: Nom de la table
+        run_id: ID du run ETL
+        load_mode: Mode de chargement
+        conn: Connexion PostgreSQL
+        config_name: Configuration spécifique (ex: lisval_produits_vehicules)
     """
-    metadata = get_table_metadata(conn, table_name)
+    metadata = get_table_metadata(conn, table_name, config_name=config_name)
     if not metadata:
         raise ValueError(f"Table metadata not found: {table_name}")
 

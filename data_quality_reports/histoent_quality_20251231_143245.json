@@ -1,0 +1,1777 @@
+{
+  "table_name": "histoent",
+  "file_path": "/data/sftp_cbmdata01/Incoming/data/parquet/histoent_20251231_140017.parquet",
+  "total_rows": 5846,
+  "total_columns": 291,
+  "scan_timestamp": "2025-12-31T14:32:45.492499",
+  "passed": true,
+  "issues": [
+    {
+      "table_name": "histoent",
+      "row_number": 1183,
+      "column_name": "adr_fac",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "HELLA FRANCE S.A.;\"11,AV. EINSTEIN \"\"LE COUDR\";",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1185,
+      "column_name": "adr_fac",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "HELLA FRANCE S.A.;\"11,AV. EINSTEIN \"\"LE COUDR\";",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 3065,
+      "column_name": "adr_fac",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "HELLA FRANCE S.A.;\"11,AV. EINSTEIN \"\"LE COUDR\";",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 3833,
+      "column_name": "adr_fac",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "UAB \"DOVAINA\";UOLES G. 16;KAISIADORIU DISTRICT",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 3834,
+      "column_name": "adr_fac",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "UAB \"DOVAINA\";UOLES G. 16;KAISIADORIU DISTRICT",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 4045,
+      "column_name": "adr_fac",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "HELLA FRANCE S.A.;\"11,AV. EINSTEIN \"\"LE COUDR\";",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 4046,
+      "column_name": "adr_fac",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "HELLA FRANCE S.A.;\"11,AV. EINSTEIN \"\"LE COUDR\";",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1813,
+      "column_name": "adr_liv",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "KEOLIS OISE;ZA \"LES CAILLOUX DE SAILLEVILLE\";250 RUE NICOLAS JOSEPH CUGNOT",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 3833,
+      "column_name": "adr_liv",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "UAB \"DOVAINA\";UOLES G. 16;KAISIADORIU DISTRICT",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 3834,
+      "column_name": "adr_liv",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "JOIN-STOCK COMPANY \"DOVAINA\";DRAUGYSTES 19 STR.;",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 4158,
+      "column_name": "adr_liv",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "KEOLIS OISE;ZA \"LES CAILLOUX DE SAILLEVILLE\";250 RUE NICOLAS JOSEPH CUGNOT",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 4159,
+      "column_name": "adr_liv",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "KEOLIS OISE;ZA \"LES CAILLOUX DE SAILLEVILLE\";250 RUE NICOLAS JOSEPH CUGNOT",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 4160,
+      "column_name": "adr_liv",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "KEOLIS OISE;ZA \"LES CAILLOUX DE SAILLEVILLE\";250 RUE NICOLAS JOSEPH CUGNOT",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 4161,
+      "column_name": "adr_liv",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "KEOLIS OISE;ZA \"LES CAILLOUX DE SAILLEVILLE\";250 RUE NICOLAS JOSEPH CUGNOT",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 4162,
+      "column_name": "adr_liv",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "KEOLIS OISE;ZA \"LES CAILLOUX DE SAILLEVILLE\";250 RUE NICOLAS JOSEPH CUGNOT",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 4163,
+      "column_name": "adr_liv",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "KEOLIS OISE;ZA \"LES CAILLOUX DE SAILLEVILLE\";250 RUE NICOLAS JOSEPH CUGNOT",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 4164,
+      "column_name": "adr_liv",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "KEOLIS OISE;ZA \"LES CAILLOUX DE SAILLEVILLE\";250 RUE NICOLAS JOSEPH CUGNOT",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 4165,
+      "column_name": "adr_liv",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "KEOLIS OISE;ZA \"LES CAILLOUX DE SAILLEVILLE\";250 RUE NICOLAS JOSEPH CUGNOT",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 4166,
+      "column_name": "adr_liv",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "KEOLIS OISE;ZA \"LES CAILLOUX DE SAILLEVILLE\";250 RUE NICOLAS JOSEPH CUGNOT",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 4244,
+      "column_name": "adr_liv",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "KEOLIS NORMANDIE SEINE;RUE DE LA GARE;LIEU DIT \"LE CHAMP DE FOIRE\"",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 3833,
+      "column_name": "zal",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "JOIN-STOCK COMPANY \"DOVAINA\";;;;",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 3834,
+      "column_name": "zal",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "JOIN-STOCK COMPANY \"DOVAINA\";;;;",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 3505,
+      "column_name": "edt_bl",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "\"steuerfreie innergemeinschaftliche Lieferung\" ",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 3506,
+      "column_name": "edt_bl",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "\"steuerfreie innergemeinschaftliche Lieferung\" ",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 3507,
+      "column_name": "edt_bl",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "\"steuerfreie innergemeinschaftliche Lieferung\" ",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 3508,
+      "column_name": "edt_bl",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "\"steuerfreie innergemeinschaftliche Lieferung\" ",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1756,
+      "column_name": "edt_fac",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "\"Der Ausführer der Waren, auf der sich dieses Handelspapier bezieht erklärt,\ndass diese Waren, sowei...",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 3092,
+      "column_name": "edt_fac",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "\"Der Ausführer der Waren, auf der sich dieses Handelspapier bezieht erklärt,\ndass diese Waren, sowei...",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 3478,
+      "column_name": "edt_fac",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "\"steuerfreie innergemeinschaftliche Lieferung\" ",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 3479,
+      "column_name": "edt_fac",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "\"steuerfreie innergemeinschaftliche Lieferung\" ",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 3480,
+      "column_name": "edt_fac",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "\"steuerfreie innergemeinschaftliche Lieferung\" ",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 3481,
+      "column_name": "edt_fac",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "\"steuerfreie innergemeinschaftliche Lieferung\" ",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 3482,
+      "column_name": "edt_fac",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "\"steuerfreie innergemeinschaftliche Lieferung\" ",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 3501,
+      "column_name": "edt_fac",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "\"steuerfreie innergemeinschaftliche Lieferung\" ",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 3502,
+      "column_name": "edt_fac",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "\"steuerfreie innergemeinschaftliche Lieferung\" ",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 3505,
+      "column_name": "edt_fac",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "\"steuerfreie innergemeinschaftliche Lieferung\" ",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 3506,
+      "column_name": "edt_fac",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "\"steuerfreie innergemeinschaftliche Lieferung\" ",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 3507,
+      "column_name": "edt_fac",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "\"steuerfreie innergemeinschaftliche Lieferung\" ",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 3508,
+      "column_name": "edt_fac",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "\"steuerfreie innergemeinschaftliche Lieferung\" ",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 3512,
+      "column_name": "edt_fac",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "\"steuerfreie innergemeinschaftliche Lieferung\" ",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 3513,
+      "column_name": "edt_fac",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "\"steuerfreie innergemeinschaftliche Lieferung\" ",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 3514,
+      "column_name": "edt_fac",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "\"steuerfreie innergemeinschaftliche Lieferung\" ",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 3515,
+      "column_name": "edt_fac",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "\"steuerfreie innergemeinschaftliche Lieferung\" ",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 3516,
+      "column_name": "edt_fac",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "\"steuerfreie innergemeinschaftliche Lieferung\" ",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 3518,
+      "column_name": "edt_fac",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "\"steuerfreie innergemeinschaftliche Lieferung\" ",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 3524,
+      "column_name": "edt_fac",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "\"steuerfreie innergemeinschaftliche Lieferung\" ",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 3526,
+      "column_name": "edt_fac",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "\"steuerfreie innergemeinschaftliche Lieferung\" ",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 3538,
+      "column_name": "edt_fac",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "\"steuerfreie innergemeinschaftliche Lieferung\" \n",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 3539,
+      "column_name": "edt_fac",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "\"steuerfreie innergemeinschaftliche Lieferung\" \n",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 3992,
+      "column_name": "edt_fac",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "\"Der Ausführer der Waren, auf der sich dieses Handelspapier bezieht erklärt,\ndass diese Waren, sowei...",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 3833,
+      "column_name": "adr_cde",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "UAB \"DOVAINA\";UOLES G. 16;KAISIADORIU DISTRICT;",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 3834,
+      "column_name": "adr_cde",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "UAB \"DOVAINA\";UOLES G. 16;KAISIADORIU DISTRICT;",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 3501,
+      "column_name": "edt_dev",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "\"steuerfreie innergemeinschaftliche Lieferung\" ",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 3502,
+      "column_name": "edt_dev",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "\"steuerfreie innergemeinschaftliche Lieferung\" ",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 3518,
+      "column_name": "edt_dev",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "\"steuerfreie innergemeinschaftliche Lieferung\" ",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 3524,
+      "column_name": "edt_dev",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "\"steuerfreie innergemeinschaftliche Lieferung\" ",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 3538,
+      "column_name": "edt_dev",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "\"steuerfreie innergemeinschaftliche Lieferung\" \n",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 3539,
+      "column_name": "edt_dev",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "\"steuerfreie innergemeinschaftliche Lieferung\" \n",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1002,
+      "column_name": "adr_fac",
+      "issue_type": "control_characters",
+      "value_sample": "'FP HYDRAULIQUE;177 AVENUE DES MELEZES\\t  BP 9;'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 20,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "\"Demande d'enregistrement en préparation pour la marque semi-figurative VAR , au nom de CBM. \\nPrépara\"",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 21,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'mini de commande = 1000,00 euros\\nenvoyer commande par mail à Stéphanie CHOQUENET'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 22,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'mini de commande = 1000,00 euros\\nenvoyer commande par mail à Stéphanie CHOQUENET'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 23,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'mini de commande = 1000,00 euros\\nenvoyer commande par mail à Stéphanie CHOQUENET'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 28,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'mini de commande = 1000,00 euros\\nenvoyer commande par mail à Stéphanie CHOQUENET'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 30,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'mini de commande = 1000,00 euros\\nenvoyer commande par mail à Stéphanie CHOQUENET'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 31,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'mini de commande = 1000,00 euros\\nenvoyer commande par mail à Stéphanie CHOQUENET'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 32,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'mini de commande = 1000,00 euros\\nenvoyer commande par mail à Stéphanie CHOQUENET'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 376,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'Envoyer les commandes par Email à :\\nyvonne@mgrsrl.net'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 421,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'franco de port 420€\\nmini de commande 40€'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 430,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'NETTI IN VIGORE\\nAVVISARE A MERCE PRONTA\\nSPEDIRE IN PORTO ASSEGNATO\\n'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 431,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'franco de port 420€\\nmini de commande 40€'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 434,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'NETTI IN VIGORE\\nIMBALLO GRATUITO SE 40X30X30\\n'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 627,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'RECOGIDA DE MATERIAL\\n9.00 - 13.00; 15.30 - 19.30'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 654,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'PLEASE ADD ON P/S & COMMERCIAL INVOICE OUR INTERNAL PART # AND PO#\\nOTHERWISE PARTS WILL BE REJECTED'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 672,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'695003 - 4896335 \\nSIN SINCRONIZAR '",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 692,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'16€ de frais pour toute facture de moins de 200€\\nEnvoyer les commandes par mail :\\nLaurence.Rangdet@B'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 710,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'NE PAS FACTURER NI LIVRER AVANT LA DATE DEMANDEE\\n\\nMINI DE COMMANDE = 1500,00€ sinon 100,00e de frais'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 856,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'MINI DE COMMANDE 5000€\\n\\nEnvoyer les commandes par mail :semih@semlastik.com'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 857,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'MINI DE COMMANDE 5000€\\n\\nEnvoyer les commandes par mail :semih@semlastik.com'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 962,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'691167 - 4914389 \\nSIN SINCRONIZAR '",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 999,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'COMMANDE DE STOCK FRANCO 900 euros\\nCOMMANDE A ENVOYER PAR EDI TECCOM'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1000,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'COMMANDE DE STOCK FRANCO 900 euros\\nCOMMANDE A ENVOYER PAR EDI TECCOM'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1007,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'Payment: 30% at order / 70% before shipment \\nSEA ORDER '",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1008,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'Payment: 30% at order / 70% before shipment \\nSEA ORDER '",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1017,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'COMMANDE DE STOCK FRANCO 900 euros\\nCOMMANDE A ENVOYER PAR EDI TECCOM'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1019,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'PLEASE ADD ON P/S & COMMERCIAL INVOICE OUR INTERNAL PART # AND PO#\\nOTHERWISE PARTS WILL BE REJECTED'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1022,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'PLEASE ADD ON P/S & COMMERCIAL INVOICE OUR INTERNAL PART # AND PO#\\nOTHERWISE PARTS WILL BE REJECTED'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1051,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'NETTI IN VIGORE\\nVETTORE:'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1053,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'Mini cde 500 € sinon 25 € frais\\nenvoyer les commandes à steve.robert@valeo.com + commandes.mailbox@v'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1056,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'portes pagados a partir de 300 euros\\nen caso contrario se cargan portes en factura'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1057,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'franco de port 420€\\nmini de commande 40€'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1074,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'ACCONTO : 3000 € \\nSUCCESSIVAMENTE\\n1.000 €/MESE SU FT BIMESTRALE ANTICIPATA \\nCON RIBA 30 GG DFFM, DUR'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1075,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'ACCONTO : 3000 € \\nSUCCESSIVAMENTE\\n1.000 €/MESE SU FT BIMESTRALE ANTICIPATA \\nCON RIBA 30 GG DFFM, DUR'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1081,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'ACCONTO : 3000 € \\nSUCCESSIVAMENTE\\n1.000 €/MESE SU FT BIMESTRALE ANTICIPATA \\nCON RIBA 30 GG DFFM, DUR'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1109,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'Envoyer les commandes par Email à :\\nyvonne@mgrsrl.net'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1110,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'Envoyer les commandes par Email à :\\nyvonne@mgrsrl.net'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1111,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'Envoyer les commandes par Email à :\\nyvonne@mgrsrl.net'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1114,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'mini commande 1200 euros + NB: « coudes 90° à angle droit » pour ref 90015090060 (=d9190482 chez CBM'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1116,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'NETTI IN VIGORE\\nAVVISARE A MERCE PRONTA\\n'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1137,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'Envoyer les commandes par Email à :\\nyvonne@mgrsrl.net'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1139,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'Envoyer les commandes par Email à :\\nyvonne@mgrsrl.net'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1150,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'mini commande 1200 euros + NB: « coudes 90° à angle droit » pour ref 90015090060 (=d9190482 chez CBM'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1151,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'/!\\\\ Information pour ZF SERVICES : ENREGISTRER UNE DATE 15 JOURS EN\\nAMONT DE LA DATE SUR LA COMMANDE'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1152,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'/!\\\\ Information pour ZF SERVICES : ENREGISTRER UNE DATE 15 JOURS EN\\nAMONT DE LA DATE SUR LA COMMANDE'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1162,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'franco de port 420€\\nmini de commande 40€'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1187,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'FRANCO A PARTIR DE 750 EUROS\\nENVOI DES COMMANDES PAR EDI'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1188,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'FRANCO A PARTIR DE 750 EUROS\\nENVOI DES COMMANDES PAR EDI'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1189,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'FRANCO A PARTIR DE 750 EUROS\\nENVOI DES COMMANDES PAR EDI'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1194,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'MINI DE COMMANDE: 100EURO\\nSauf indication contraire, merci de livrer en messagerie.'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1204,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'Envoyer les commandes par Email à :\\nyvonne@mgrsrl.net'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1243,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'Délais appro jauges 8 à 12 semaines ! \\nEnvoyer les commandes par courriel.\\nn.duneau@acgb.com'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1273,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'MINI DE COMMANDE: 100EURO\\nSauf indication contraire, merci de livrer en messagerie.'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1274,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'MINI DE COMMANDE: 100EURO\\nSauf indication contraire, merci de livrer en messagerie.'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1300,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'portes pagados a partir de 300 euros\\nen caso contrario se cargan portes en factura'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1319,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'MERCI DE NOUS FAXER LE BON DE LIVRAISON EN CAS DE LIVRAISON\\nEN DIRECT CHEZ LE CLIENT\\nEnvoyer les com'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1320,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'MERCI DE NOUS FAXER LE BON DE LIVRAISON EN CAS DE LIVRAISON\\nEN DIRECT CHEZ LE CLIENT\\nEnvoyer les com'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1321,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'MERCI DE NOUS FAXER LE BON DE LIVRAISON EN CAS DE LIVRAISON\\nEN DIRECT CHEZ LE CLIENT\\nEnvoyer les com'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1322,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'MERCI DE NOUS FAXER LE BON DE LIVRAISON EN CAS DE LIVRAISON\\nEN DIRECT CHEZ LE CLIENT\\nEnvoyer les com'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1324,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'MERCI DE NOUS FAXER LE BON DE LIVRAISON EN CAS DE LIVRAISON\\nEN DIRECT CHEZ LE CLIENT\\nEnvoyer les com'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1354,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'mini de commande = 1000,00 euros\\nenvoyer commande par mail à Stéphanie CHOQUENET'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1355,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'mini de commande = 1000,00 euros\\nenvoyer commande par mail à Stéphanie CHOQUENET'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1368,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'MINI DE COMMANDE: 100EURO\\nSauf indication contraire, merci de livrer en messagerie.'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1387,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'mini franco 770 euros\\n\\nEnvoyer les commandes par email à Pauline ROECKEL : pauline.roeckel@haldex.co'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1423,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'PLEASE ADD ON P/S & COMMERCIAL INVOICE OUR INTERNAL PART # AND PO#\\nOTHERWISE PARTS WILL BE REJECTED'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1458,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'\\n'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1459,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'\\n'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1465,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'\\n'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1466,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'\\n'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1473,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'\\n'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1475,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'\\n'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1479,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'\\n'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1481,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'\\n'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1512,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'\\n'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1513,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'\\n'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1514,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'\\n'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1515,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'\\n'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1517,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'\\n'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1524,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'\\n'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1526,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'\\n'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1529,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'\\n'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1531,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'\\n'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1532,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'\\n'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1533,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'\\n'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1534,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'\\n'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1535,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'\\n'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1536,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'\\n'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1542,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'\\n'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1553,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'\\n'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1592,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'NETTI IN VIGORE\\nAVVISARE A MERCE PRONTA\\n'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1617,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'\\n'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1618,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'\\n'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1620,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'\\n'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1622,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'\\n'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1624,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'\\n'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1626,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'\\n'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1628,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'\\n'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1630,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'\\n'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 1646,
+      "column_name": "edt_bl",
+      "issue_type": "control_characters",
+      "value_sample": "'\\n'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 0,
+      "column_name": "ref_cde",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "1 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 0,
+      "column_name": "adr_fac",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5846 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 0,
+      "column_name": "adr_fac",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "1 rows contain '\t'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \"\t\" (géré automatiquement)"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 0,
+      "column_name": "adr_liv",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5846 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 0,
+      "column_name": "commerc",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5846 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 0,
+      "column_name": "zal",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5846 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 0,
+      "column_name": "znu",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5846 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 0,
+      "column_name": "zta",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5846 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 0,
+      "column_name": "zda",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "1441 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 0,
+      "column_name": "edt_bl",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "1 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 0,
+      "column_name": "edt_bl",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "3 rows contain '|'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \"|\" (géré automatiquement)"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 0,
+      "column_name": "edt_bl",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "6 rows contain '\t'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \"\t\" (géré automatiquement)"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 0,
+      "column_name": "edt_fac",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "3 rows contain '|'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \"|\" (géré automatiquement)"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 0,
+      "column_name": "edt_fac",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "6 rows contain '\t'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \"\t\" (géré automatiquement)"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 0,
+      "column_name": "rem_glo",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5846 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 0,
+      "column_name": "coef_mar",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5846 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 0,
+      "column_name": "cod_fof",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5846 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 0,
+      "column_name": "frais",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5846 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 0,
+      "column_name": "dev_frais",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5846 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 0,
+      "column_name": "nofaca",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5846 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 0,
+      "column_name": "mtfaca",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5846 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 0,
+      "column_name": "zlo",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5846 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 0,
+      "column_name": "no_fa_a",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5846 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 0,
+      "column_name": "cod_prof",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5846 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 0,
+      "column_name": "nom_prof",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5846 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 0,
+      "column_name": "adr_cde",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5846 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 0,
+      "column_name": "tar_cum",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5846 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 0,
+      "column_name": "tar_fil",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5846 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 0,
+      "column_name": "cai_reg",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5846 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 0,
+      "column_name": "memory_decimal",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5846 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 0,
+      "column_name": "com_liv",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5846 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 0,
+      "column_name": "tar_fi2",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5846 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 0,
+      "column_name": "tar_cu2",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5846 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 0,
+      "column_name": "adr_enl",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5846 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 0,
+      "column_name": "corresp",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5846 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 0,
+      "column_name": "trop_percu",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5846 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 0,
+      "column_name": "reg_cod",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5846 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "histoent",
+      "row_number": 0,
+      "column_name": "rendu",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5846 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    }
+  ],
+  "issue_count": 196,
+  "error_count": 0,
+  "warning_count": 158
+}

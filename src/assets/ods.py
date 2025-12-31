@@ -2,6 +2,8 @@
 ============================================================================
 Assets ODS - STAGING → ODS avec SCD2 (historisation)
 ============================================================================
+FIX: Utilise config_name pour chercher metadata (pour tables lisval)
+============================================================================
 """
 
 from dagster import AssetExecutionContext, asset, AssetIn
@@ -68,29 +70,34 @@ def ods_tables(
     with context.resources.postgres.get_connection() as conn:
         for table_info in staging_tables["results"]:
             table_name = table_info["table"]
+            config_name = table_info.get("config_name")  # ✅ RÉCUPÉRER config_name
             physical_name = table_info.get("physical_name", table_name)
             load_mode = table_info["mode"]
 
             try:
-                # Récupérer métadonnées pour logs
-                metadata = get_table_metadata(conn, table_name)
+                # ✅ Récupérer métadonnées avec config_name si présent
+                metadata = get_table_metadata(conn, table_name, config_name=config_name)
                 
-                if metadata:
-                    columns_metadata = metadata["columns"]
-                    extent_cols = get_extent_columns(columns_metadata)
-                    
-                    if extent_cols:
-                        context.log.info(
-                            f"[{physical_name}] Typing {len(extent_cols)} EXTENT "
-                            f"column(s) from TEXT to strict types"
-                        )
+                if not metadata:
+                    context.log.warning(f"No metadata found for {table_name} (config: {config_name}), skipping")
+                    continue
                 
-                # Merge avec SCD2
+                columns_metadata = metadata["columns"]
+                extent_cols = get_extent_columns(columns_metadata)
+                
+                if extent_cols:
+                    context.log.info(
+                        f"[{physical_name}] Typing {len(extent_cols)} EXTENT "
+                        f"column(s) from TEXT to strict types"
+                    )
+                
+                # ✅ Merge avec SCD2 en passant config_name
                 rows = merge_staging_to_ods(
                     table_name=table_name,
                     run_id=run_id,
                     load_mode=load_mode,
                     conn=conn,
+                    config_name=config_name  # ✅ Passer config_name
                 )
                 
                 conn.commit()
@@ -98,6 +105,7 @@ def ods_tables(
                 total_rows += rows
                 results.append({
                     "table": table_name,
+                    "config_name": config_name,  # ✅ Inclure config_name
                     "physical_name": physical_name,
                     "rows": rows,
                     "mode": load_mode,

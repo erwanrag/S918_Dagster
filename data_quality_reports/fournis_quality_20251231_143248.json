@@ -1,0 +1,274 @@
+{
+  "table_name": "fournis",
+  "file_path": "/data/sftp_cbmdata01/Incoming/data/parquet/fournis_20251231_140013.parquet",
+  "total_rows": 5,
+  "total_columns": 122,
+  "scan_timestamp": "2025-12-31T14:32:48.114089",
+  "passed": true,
+  "issues": [
+    {
+      "table_name": "fournis",
+      "row_number": 2,
+      "column_name": "txt_com",
+      "issue_type": "control_characters",
+      "value_sample": "'Réglement :\\n1ére commande : comptant avant livraison\\ncommandes suivantes : 30 jours nets, date de fa'",
+      "severity": "warning",
+      "suggestion": "Caractères de contrôle seront remplacés par des espaces"
+    },
+    {
+      "table_name": "fournis",
+      "row_number": 0,
+      "column_name": "coef_ach",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "fournis",
+      "row_number": 0,
+      "column_name": "del_liv",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "fournis",
+      "row_number": 0,
+      "column_name": "cal_cde",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "fournis",
+      "row_number": 0,
+      "column_name": "h_lim_cde",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "fournis",
+      "row_number": 0,
+      "column_name": "cal_liv",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "fournis",
+      "row_number": 0,
+      "column_name": "h_lim_liv",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "fournis",
+      "row_number": 0,
+      "column_name": "del_appro",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "fournis",
+      "row_number": 0,
+      "column_name": "relik",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "fournis",
+      "row_number": 0,
+      "column_name": "zal",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "fournis",
+      "row_number": 0,
+      "column_name": "znu",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "fournis",
+      "row_number": 0,
+      "column_name": "zta",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "fournis",
+      "row_number": 0,
+      "column_name": "coef_vte",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "fournis",
+      "row_number": 0,
+      "column_name": "zlo",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "fournis",
+      "row_number": 0,
+      "column_name": "jr_app",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "fournis",
+      "row_number": 0,
+      "column_name": "clas_fc",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "fournis",
+      "row_number": 0,
+      "column_name": "remise1",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "fournis",
+      "row_number": 0,
+      "column_name": "remise2",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "fournis",
+      "row_number": 0,
+      "column_name": "remise3",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "fournis",
+      "row_number": 0,
+      "column_name": "remise4",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "fournis",
+      "row_number": 0,
+      "column_name": "ord_rem",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "fournis",
+      "row_number": 0,
+      "column_name": "interloc",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "fournis",
+      "row_number": 0,
+      "column_name": "adresse",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "fournis",
+      "row_number": 0,
+      "column_name": "typ_rem1",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "fournis",
+      "row_number": 0,
+      "column_name": "typ_rem2",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "fournis",
+      "row_number": 0,
+      "column_name": "typ_rem3",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "fournis",
+      "row_number": 0,
+      "column_name": "typ_rem4",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "fournis",
+      "row_number": 0,
+      "column_name": "rem_app",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "fournis",
+      "row_number": 0,
+      "column_name": "grille_rem",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    }
+  ],
+  "issue_count": 29,
+  "error_count": 0,
+  "warning_count": 1
+}

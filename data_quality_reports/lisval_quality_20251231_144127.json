@@ -1,0 +1,12 @@
+{
+  "table_name": "lisval",
+  "file_path": "/data/sftp_cbmdata01/Incoming/data/parquet/lisval_produits_vehicules_20251230_220239.parquet",
+  "total_rows": 10000,
+  "total_columns": 77,
+  "scan_timestamp": "2025-12-31T14:41:27.449086",
+  "passed": true,
+  "issues": [],
+  "issue_count": 0,
+  "error_count": 0,
+  "warning_count": 0
+}

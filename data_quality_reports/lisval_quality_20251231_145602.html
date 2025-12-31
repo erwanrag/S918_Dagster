@@ -1,0 +1,44 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Data Quality Report - lisval</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .header { background: #f0f0f0; padding: 20px; border-radius: 5px; }
+        .summary { margin: 20px 0; }
+        .passed { color: green; font-weight: bold; }
+        .failed { color: red; font-weight: bold; }
+        table { border-collapse: collapse; width: 100%; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #4CAF50; color: white; }
+        .error { background-color: #ffebee; }
+        .warning { background-color: #fff3e0; }
+        .info { background-color: #e3f2fd; }
+        pre { background: #f5f5f5; padding: 10px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Data Quality Report</h1>
+        <p><strong>Table:</strong> lisval</p>
+        <p><strong>File:</strong> /data/sftp_cbmdata01/Incoming/data/parquet/lisval_produits_vehicules_20251230_220239.parquet</p>
+        <p><strong>Scan Time:</strong> 2025-12-31T14:56:02.652263</p>
+        <p><strong>Status:</strong> <span class="passed">
+            ✅ PASSED
+        </span></p>
+    </div>
+    
+    <div class="summary">
+        <h2>Summary</h2>
+        <ul>
+            <li>Total Rows: 10,000</li>
+            <li>Total Columns: 77</li>
+            <li>Issues Found: 0</li>
+            <li>Errors: 0</li>
+            <li>Warnings: 0</li>
+        </ul>
+    </div>
+<p style='color: green; font-size: 18px;'>✅ No issues found!</p>
+</body>
+</html>

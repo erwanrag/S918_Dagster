@@ -2,6 +2,8 @@
 ============================================================================
 Assets Ingestion - SFTP INVENTORY (scan + enrichissement + consolidation)
 ============================================================================
+FIX: Gère les listes retournées par handle_duplicate_files (tables multi-config)
+============================================================================
 """
 
 from pathlib import Path
@@ -36,6 +38,7 @@ def sftp_parquet_inventory(
     Strategy:
     - FULL/FULL_RESET : Garde dernier fichier, archive le reste
     - INCREMENTAL : Consolide tous les fichiers en un seul
+    - Multi-config tables (lisval) : Retourne tous les fichiers séparément
     """
     settings = get_settings()
     
@@ -76,15 +79,18 @@ def sftp_parquet_inventory(
         if len(file_list) == 1:
             final_files.append(file_list[0])
         else:
-            # Consolider ou archiver selon load_mode
-            consolidated_file = handle_duplicate_files(
+            # ✅ handle_duplicate_files retourne maintenant une LISTE
+            # - Pour tables multi-config (lisval) : liste de N fichiers
+            # - Pour tables normales : liste de 1 fichier (consolidé ou dernier)
+            result_files = handle_duplicate_files(
                 table_name=table_name,
                 file_list=file_list,
                 consolidated_dir=consolidated_dir,
                 superseded_dir=superseded_dir,
                 logger=context.log
             )
-            final_files.append(consolidated_file)
+            # ✅ Ajouter TOUS les fichiers de la liste
+            final_files.extend(result_files)
 
     context.log.info(
         f"After consolidation: {len(final_files)} file(s) to load "
@@ -98,16 +104,18 @@ def sftp_parquet_inventory(
 
     with context.resources.postgres.get_connection() as conn:
         for file in final_files:
-            # Gérer à la fois les objets FileInfo et les dicts (fichiers consolidés)
+            # ✅ Gérer à la fois les objets FileInfo et les dicts (fichiers consolidés)
             if isinstance(file, dict):
                 table_name = file['table_name']
+                config_name = file.get('config_name')  # ✅ Récupérer config_name
                 file_dict = file
             else:
                 table_name = file.table_name
+                config_name = getattr(file, 'config_name', None)  # ✅ Récupérer config_name
                 file_dict = file.to_dict()
             
-            # Récupérer métadonnées
-            table_meta = get_table_metadata(conn, table_name)
+            # ✅ Récupérer métadonnées avec config_name
+            table_meta = get_table_metadata(conn, table_name, config_name=config_name)
 
             if table_meta:
                 file_dict["primary_keys"] = table_meta["primary_keys"]
