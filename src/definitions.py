@@ -11,8 +11,12 @@ from src.assets import ingestion, raw, staging, ods, services, dbt_prep
 
 from src.jobs.pipelines import (
     full_etl_pipeline,
+    ingestion_pipeline,      # SFTP → RAW → STAGING → ODS
+    raw_pipeline,            # ✅ AJOUTER
     ods_pipeline,
+    prep_pipeline,
     services_pipeline,
+    recovery_from_staging,
 )
 from src.jobs.auxiliary import (
     maintenance_cleanup_job,
@@ -58,8 +62,16 @@ definitions = Definitions(
     jobs=[
         # Pipeline principal
         full_etl_pipeline,
-        ods_pipeline,
-        services_pipeline,
+        
+        # Pipelines partiels
+        ingestion_pipeline,        # SFTP → RAW → STAGING → ODS (sans dbt)
+        raw_pipeline,              # ✅ SFTP → RAW uniquement
+        ods_pipeline,              # STAGING → ODS
+        prep_pipeline,             # ODS → dbt PREP
+        services_pipeline,         # Services (devises, temps)
+        
+        # Recovery
+        recovery_from_staging,
         
         # Maintenance & imports
         maintenance_cleanup_job,
@@ -76,7 +88,7 @@ definitions = Definitions(
         # maintenance_schedule,          # 0 4 1 * * (1er du mois à 4h)
         # heavy_maintenance_schedule,    # 0 3 1 */3 * (trimestriel)
         
-        # # Metadata
+        # Metadata
         # metadata_import_schedule,      # 0 8 * * * (8h du matin)
     ],
     

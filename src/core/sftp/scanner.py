@@ -318,7 +318,7 @@ def scan_parquet_files(validate_files: bool = True) -> list[SftpFile]:
         )
     
     # ================================================================
-    # 5. GESTION DOUBLONS (garder le plus récent par physical_name)
+    # 5. DÉTECTION DOUBLONS (log warning mais retourner TOUS)
     # ================================================================
     from collections import defaultdict
     
@@ -326,19 +326,17 @@ def scan_parquet_files(validate_files: bool = True) -> list[SftpFile]:
     for file in discovered:
         files_by_table[file.physical_name].append(file)
     
-    final_files = []
+    # Log warning pour les doublons (consolidation gérera)
     for physical_name, files in files_by_table.items():
         if len(files) > 1:
+            files.sort(key=lambda f: f.extraction_date, reverse=True)
             logger.warning(
-                "Multiple files for same table, keeping most recent",
+                "Multiple files detected for table (will be handled by consolidation)",
                 table=physical_name,
                 count=len(files),
-                files=[f.file_name for f in files]
+                latest=files[0].file_name,
+                all_files=[f.file_name for f in files]
             )
-            # Trier par extraction_date (plus récent en premier)
-            files.sort(key=lambda f: f.extraction_date, reverse=True)
-        
-        final_files.append(files[0])
     
     # ================================================================
     # RÉSUMÉ
@@ -346,11 +344,11 @@ def scan_parquet_files(validate_files: bool = True) -> list[SftpFile]:
     logger.info(
         "SFTP scan completed",
         total_parquet=len(parquet_files),
-        discovered=len(final_files),
+        discovered=len(discovered),  # ✅ Tous les fichiers
         skipped_no_metadata=skipped["no_metadata"],
         skipped_not_completed=skipped["not_completed"],
         skipped_validation_failed=skipped["validation_failed"],
         skipped_invalid_metadata=skipped["invalid_metadata"]
     )
     
-    return final_files
+    return discovered  # ✅ Retourner TOUS les fichiers

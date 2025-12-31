@@ -7,6 +7,7 @@ Exemple: znu (TEXT "123.45;0;0;0;0") → znu_1, znu_2, znu_3, znu_4, znu_5 (NUME
 ============================================================================
 """
 
+from typing import Optional
 from psycopg2 import sql
 
 from src.config.constants import LoadMode, Schema
@@ -154,6 +155,7 @@ def create_staging_table(
 
 def load_raw_to_staging(
     table_name: str,
+    physical_name: str,  # ✅ SEUL AJOUT
     run_id: str,
     load_mode: str,
     conn,
@@ -168,18 +170,39 @@ def load_raw_to_staging(
 
     staging_schema = Schema.STAGING.value
     raw_schema = Schema.RAW.value
-    table = metadata["physical_name"].lower()
-    columns_metadata = metadata["columns"]
+    staging_table = metadata["physical_name"].lower()
+    raw_table = f"raw_{physical_name.lower()}"  # ✅ Utiliser physical_name
 
+    # ✅ VÉRIFICATION : Table RAW existe ?
+    with conn.cursor() as cur:
+        cur.execute("""
+            SELECT EXISTS (
+                SELECT FROM information_schema.tables 
+                WHERE table_schema = %s AND table_name = %s
+            )
+        """, (raw_schema, raw_table))
+        
+        if not cur.fetchone()[0]:
+            logger.error(f"RAW table missing: {raw_schema}.{raw_table}")
+            raise ValueError(f"RAW table not found: {raw_schema}.{raw_table}")
+
+    columns_metadata = metadata["columns"]
     select_expr = build_select_with_extent_and_cast(columns_metadata, "src")
     
-    logger.info("Loading RAW to STAGING", table=table_name, physical=table, mode=load_mode)
+    logger.info(
+        "Loading RAW to STAGING",
+        table=table_name,
+        physical=physical_name,
+        mode=load_mode,
+        raw_table=raw_table,
+        staging_table=staging_table
+    )
 
     with conn.cursor() as cur:
         if load_mode == LoadMode.FULL_RESET.value:
             cur.execute(
                 sql.SQL("TRUNCATE TABLE {}.{}")
-                .format(sql.Identifier(staging_schema), sql.Identifier(table))
+                .format(sql.Identifier(staging_schema), sql.Identifier(staging_table))
             )
             logger.debug("Staging table truncated", table=table_name)
 
@@ -192,17 +215,21 @@ def load_raw_to_staging(
             FROM {raw_schema}.{raw_table} src
         """).format(
             staging_schema=sql.Identifier(staging_schema),
-            table=sql.Identifier(table),
+            table=sql.Identifier(staging_table),
             select_expr=sql.SQL(select_expr),
             raw_schema=sql.Identifier(raw_schema),
-            raw_table=sql.Identifier(f"raw_{table}"),
+            raw_table=sql.Identifier(raw_table),
         )
-        logger.error(f"========== SQL Query for {table_name} ==========")
-        logger.error(query.as_string(conn))
+        
         cur.execute(query, (run_id,))
         rows_inserted = cur.rowcount
 
-        logger.info("RAW to STAGING loaded", table=table_name, rows=rows_inserted, mode=load_mode)
+        logger.info(
+            "RAW to STAGING loaded",
+            table=table_name,
+            rows=rows_inserted,
+            mode=load_mode
+        )
         return rows_inserted
 
 
@@ -234,8 +261,10 @@ def build_select_with_extent_and_cast(
                 # Gestion cast selon type
                 if element_type.startswith("NUMERIC") or element_type in ["INTEGER", "BIGINT"]:
                     select_parts.append(
-                        f'NULLIF(TRIM(split_part({source_alias}."{col_name}", \';\', {i})), \'\')::{element_type} '
-                        f'AS "{target_col}"'
+                        f'CASE '
+                        f'WHEN TRIM(split_part({source_alias}."{col_name}", \';\', {i})) IN (\'\', \'?\') THEN NULL '
+                        f'ELSE NULLIF(TRIM(split_part({source_alias}."{col_name}", \';\', {i})), \'\')::{element_type} '
+                        f'END AS "{target_col}"'
                     )
                 elif element_type.upper() in ["BOOLEAN", "BIT", "LOGICAL"]:
                     select_parts.append(
@@ -249,7 +278,7 @@ def build_select_with_extent_and_cast(
                         f'''CASE 
                             WHEN TRIM(split_part({source_alias}."{col_name}", ';', {i})) = '' THEN NULL
                             WHEN TRIM(split_part({source_alias}."{col_name}", ';', {i})) = '?' THEN NULL
-                            WHEN TRIM(split_part({source_alias}."{col_name}", ';', {i})) ~ '^\d{{2}}/\d{{2}}/\d{{4}}$' THEN
+                            WHEN TRIM(split_part({source_alias}."{col_name}", ';', {i})) ~ '^\\d{{2}}/\\d{{2}}/\\d{{4}}$' THEN
                                 TO_DATE(TRIM(split_part({source_alias}."{col_name}", ';', {i})), 'MM/DD/YYYY')::{element_type}
                             ELSE 
                                 TRIM(split_part({source_alias}."{col_name}", ';', {i}))::{element_type}
@@ -265,9 +294,12 @@ def build_select_with_extent_and_cast(
             
             if data_type.startswith("NUMERIC") or data_type in ["INTEGER", "BIGINT"]:
                 select_parts.append(
-                    f'NULLIF(TRIM({source_alias}."{col_name}"), \'\')::{data_type} AS "{col_name}"'
+                    f'CASE '
+                    f'WHEN TRIM({source_alias}."{col_name}") IN (\'\', \'?\') THEN NULL '
+                    f'ELSE NULLIF(TRIM({source_alias}."{col_name}"), \'\')::{data_type} '
+                    f'END AS "{col_name}"'
                 )
-            elif data_type.upper() in ["BOOLEAN", "BIT", "LOGICAL"]:  # ← ✅ CORRIGÉ ICI
+            elif data_type.upper() in ["BOOLEAN", "BIT", "LOGICAL"]:
                 select_parts.append(
                     f'CASE '
                     f'WHEN LOWER(TRIM({source_alias}."{col_name}")) IN (\'true\', \'t\', \'1\', \'yes\') THEN TRUE '
@@ -280,7 +312,6 @@ def build_select_with_extent_and_cast(
                     f'ELSE TRIM({source_alias}."{col_name}")::{data_type} END AS "{col_name}"'
                 )
             else:  # TEXT, VARCHAR ou autre type non prévu
-                # CAST QUAND MÊME pour garantir le bon type
                 select_parts.append(
                     f'NULLIF(TRIM({source_alias}."{col_name}"), \'\')::{data_type} AS "{col_name}"'
                 )

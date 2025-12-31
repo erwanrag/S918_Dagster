@@ -7,31 +7,49 @@ from src.hooks.alerting_hooks import alert_on_failure, alert_on_success
 
 
 # =============================================================================
-# Pipeline principal (sans services)
+# Pipeline principal (SFTP → RAW → STAGING → ODS → dbt PREP)
 # =============================================================================
 
 full_etl_pipeline = define_asset_job(
     name="full_etl_pipeline",
-    selection=AssetSelection.groups("ingestion", "raw", "staging", "ods", "prep"),
-    description="Pipeline ETL complet: SFTP → RAW → STAGING → ODS → PREP",
+    selection=AssetSelection.groups(
+        "ingestion", 
+        "raw", 
+        "staging", 
+        "ods", 
+        "dbt_prep"
+    ),
+    description="Pipeline ETL complet: SFTP → RAW → STAGING → ODS → dbt PREP",
     hooks={alert_on_failure, alert_on_success},
 )
 
 
 # =============================================================================
-# Pipeline Ingestion (SFTP → RAW → STAGING)
+# Pipeline Ingestion (SFTP → RAW → STAGING → ODS)
 # =============================================================================
 
 ingestion_pipeline = define_asset_job(
     name="ingestion_pipeline",
-    selection=AssetSelection.groups("ingestion", "raw", "staging"),
-    description="Ingestion: SFTP → RAW → STAGING",
+    selection=AssetSelection.groups("ingestion", "raw", "staging", "ods"),  # ✅ Ajout ODS
+    description="Ingestion: SFTP → RAW → STAGING → ODS (sans dbt)",
     hooks={alert_on_failure},
 )
 
 
 # =============================================================================
-# Pipeline ODS uniquement
+# Pipeline RAW uniquement (SFTP → RAW)
+# =============================================================================
+
+raw_pipeline = define_asset_job(
+    name="raw_pipeline",
+    selection=AssetSelection.groups("ingestion", "raw"),
+    description="RAW: SFTP → RAW uniquement",
+    hooks={alert_on_failure},
+)
+
+
+# =============================================================================
+# Pipeline ODS uniquement (STAGING → ODS)
 # =============================================================================
 
 ods_pipeline = define_asset_job(
@@ -43,12 +61,12 @@ ods_pipeline = define_asset_job(
 
 
 # =============================================================================
-# Pipeline PREP uniquement
+# Pipeline PREP uniquement (ODS → dbt)
 # =============================================================================
 
 prep_pipeline = define_asset_job(
     name="prep_pipeline",
-    selection=AssetSelection.groups("prep"),
+    selection=AssetSelection.groups("dbt_prep"),
     description="PREP: ODS → PREP (dbt)",
     hooks={alert_on_failure},
 )

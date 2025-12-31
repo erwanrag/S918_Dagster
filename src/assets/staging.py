@@ -7,8 +7,8 @@ Exemple: zal ("AAA;;;;") → zal_1 ("AAA"), zal_2 (""), zal_3 (""), ...
 ============================================================================
 """
 
-from dagster import AssetExecutionContext, asset
-from datetime import datetime
+from dagster import AssetExecutionContext, asset, AssetIn
+from tenacity import retry, stop_after_attempt, wait_fixed, RetryError
 
 from src.core.staging.transformer import create_staging_table, load_raw_to_staging
 from src.core.staging.extent import count_expanded_columns, get_extent_columns
@@ -19,15 +19,14 @@ from src.db.metadata import get_table_metadata
     name="staging_tables",
     group_name="staging",
     required_resource_keys={"postgres"},
+    ins={"raw_sftp_tables": AssetIn(key="raw_sftp_tables")},
     description="""
     Tables STAGING normalisées avec éclatement EXTENT.
 
     Transformations appliquées:
     • Colonnes EXTENT éclatées avec split_part(colonne, ';', N)
-    • Typage flexible (TEXT) pour validation en ODS
-    • Hashdiff MD5 pour déduplication
-    • Colonnes ETL (_etl_hashdiff, _etl_run_id, _etl_valid_from)
-    
+    • Colonnes ETL (_etl_run_id, _etl_valid_from)
+
     Exemple transformation EXTENT:
     - RAW : znu TEXT = "123.45;0;0;0;0"
     - STAGING : znu_1="123.45", znu_2="0", znu_3="0", znu_4="0", znu_5="0"
@@ -37,88 +36,111 @@ def staging_tables(
     context: AssetExecutionContext,
     raw_sftp_tables: dict,
 ) -> dict:
-    """
-    Transformer RAW → STAGING avec éclatement EXTENT
+    """Transform RAW → STAGING avec éclatement EXTENT"""
     
-    Args:
-        raw_sftp_tables: Résultats du chargement RAW
+    if not raw_sftp_tables.get("results"):
+        return {
+            "results": [], 
+            "total_rows": 0, 
+            "run_id": raw_sftp_tables.get("run_id", "empty")
+        }
     
-    Returns:
-        Statistiques de transformation avec détails EXTENT
-    """
-    run_id = f"dagster_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
-    
+    run_id = raw_sftp_tables["run_id"]
     context.log.info(f"Starting STAGING transformation with run_id: {run_id}")
     
     results = []
     total_rows = 0
     total_extent_columns_expanded = 0
 
-    with context.resources.postgres.get_connection() as conn:
-        for table_info in raw_sftp_tables["results"]:
-            table_name = table_info["table"]
-            physical_name = table_info.get("physical_name", table_name)
-            load_mode = table_info.get("mode", "FULL")
+    # ✅ BOUCLE FOR
+    for table_info in raw_sftp_tables["results"]:
+        table_name = table_info["table"]
+        physical_name = table_info.get("physical_name", table_name)
+        load_mode = table_info.get("mode", "FULL")
+        
+        # ✅ CRÉER UNE VRAIE NOUVELLE CONNEXION
+        import psycopg2
+        import os
+        
+        conn = None
+        try:
+            conn = psycopg2.connect(
+                host=os.getenv("ETL_PG_HOST"),
+                port=int(os.getenv("ETL_PG_PORT", "5432")),
+                database=os.getenv("ETL_PG_DATABASE"),
+                user=os.getenv("ETL_PG_USER"),
+                password=os.getenv("ETL_PG_PASSWORD"),
+            )
+            conn.autocommit = False
             
-            try:
-                # Récupérer métadonnées pour compter colonnes EXTENT
-                metadata = get_table_metadata(conn, table_name)
-                
-                if not metadata:
-                    context.log.warning(
-                        f"No metadata found for {table_name}, skipping"
-                    )
-                    continue
-                
-                columns_metadata = metadata["columns"]
-                extent_cols = get_extent_columns(columns_metadata)
-                total_cols_expanded = count_expanded_columns(columns_metadata)
-                
-                # Log détails EXTENT
-                if extent_cols:
-                    context.log.info(
-                        f"[{physical_name}] EXTENT columns: {len(extent_cols)} "
-                        f"→ {total_cols_expanded} columns after split_part()"
-                    )
-                    for col_name, extent in extent_cols.items():
-                        context.log.debug(
-                            f"  {col_name} (extent={extent}) → "
-                            f"{col_name}_1...{col_name}_{extent}"
-                        )
-                
-                # Créer table STAGING
-                create_staging_table(table_name, load_mode, conn)
-                
-                # Charger données avec éclatement
-                rows = load_raw_to_staging(table_name, run_id, load_mode, conn)
-                
-                conn.commit()
-                
-                total_rows += rows
-                total_extent_columns_expanded += (total_cols_expanded - len(columns_metadata))
-                
-                results.append({
-                    "table": table_name,
-                    "physical_name": physical_name,
-                    "rows": rows,
-                    "mode": load_mode,
-                    "base_columns": len(columns_metadata),
-                    "extent_columns": len(extent_cols),
-                    "total_columns_expanded": total_cols_expanded,
-                })
-                
-                context.log.info(
-                    f"STAGING load completed: {physical_name} "
-                    f"({rows:,} rows, {total_cols_expanded} columns)"
-                )
-
-            except Exception as e:
+            # Récupérer métadonnées
+            metadata = get_table_metadata(conn, table_name)
+            if not metadata:
+                context.log.warning(f"No metadata found for {table_name}, skipping")
                 conn.rollback()
-                context.log.error(
-                    f"STAGING failed for {table_name}: {str(e)}"
-                )
-                # Continue avec les autres tables
+                conn.close()
                 continue
+            
+            columns_metadata = metadata["columns"]
+            extent_cols = get_extent_columns(columns_metadata)
+            total_cols_expanded = count_expanded_columns(columns_metadata)
+            
+            if extent_cols:
+                context.log.info(
+                    f"[{physical_name}] EXTENT columns: {len(extent_cols)} "
+                    f"→ {total_cols_expanded} columns after split_part()"
+                )
+            
+            # ✅ FONCTION RETRY
+            @retry(stop=stop_after_attempt(2), wait=wait_fixed(3))
+            def process_table_with_retry():
+                create_staging_table(table_name, load_mode, conn)
+                return load_raw_to_staging(
+                    table_name=table_name,
+                    physical_name=physical_name,
+                    run_id=run_id,
+                    load_mode=load_mode,
+                    conn=conn
+                )
+            
+            # Exécuter avec retry
+            rows = process_table_with_retry()
+            
+            # ✅ COMMIT IMMÉDIAT
+            conn.commit()
+            conn.close()
+            
+            total_rows += rows
+            total_extent_columns_expanded += (total_cols_expanded - len(columns_metadata))
+            
+            results.append({
+                "table": table_name,
+                "physical_name": physical_name,
+                "rows": rows,
+                "mode": load_mode,
+                "base_columns": len(columns_metadata),
+                "extent_columns": len(extent_cols),
+                "total_columns_expanded": total_cols_expanded,
+            })
+            
+            context.log.info(f"✅ STAGING completed: {physical_name} ({rows:,} rows)")
+
+        except RetryError as e:
+            if conn:
+                conn.rollback()
+                conn.close()
+            last_error = e.last_attempt.exception()
+            context.log.error(
+                f"❌ STAGING failed after retries for {physical_name}: {last_error}"
+            )
+            continue
+            
+        except Exception as e:  # ✅ BON NIVEAU D'INDENTATION
+            if conn:
+                conn.rollback()
+                conn.close()
+            context.log.error(f"❌ STAGING failed for {physical_name}: {str(e)}")
+            continue
     
     # ================================================================
     # RÉSUMÉ FINAL

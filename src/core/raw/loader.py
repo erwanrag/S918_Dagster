@@ -13,6 +13,7 @@ Version finale tenant compte de la réalité du Parquet :
 from pathlib import Path
 from io import StringIO
 from datetime import datetime
+from typing import Optional
 
 import pyarrow.parquet as pq
 import psycopg2
@@ -28,6 +29,7 @@ logger = get_logger(__name__)
 def load_parquet_to_raw(
     parquet_path: Path,
     table_name: str,
+    config_name: Optional[str],  # ✅ AJOUT
     columns_metadata: list[dict],
     log_id: int,
     conn=None,  # Ignoré, on crée notre propre connexion
@@ -40,7 +42,8 @@ def load_parquet_to_raw(
     
     Args:
         parquet_path: Chemin du fichier parquet
-        table_name: Nom de la table (ex: "client")
+        table_name: Nom de la table logique (ex: "client")
+        config_name: Nom config (ex: "client_export") ou None
         columns_metadata: Métadonnées colonnes enrichies depuis metadata.json
         log_id: ID du log monitoring
         conn: Connection (ignorée, on crée la nôtre)
@@ -50,10 +53,20 @@ def load_parquet_to_raw(
     """
     settings = get_settings()
     file_name = parquet_path.name
-    raw_table_name = f"raw_{table_name.lower()}"
+    
+    # ✅ UTILISER physical_name (config_name si existe, sinon table_name)
+    physical_name = (config_name or table_name).lower()
+    raw_table_name = f"raw_{physical_name}"
     full_table = f"{Schema.RAW.value}.{raw_table_name}"
 
-    logger.info("Loading parquet to RAW", table=table_name, file=file_name)
+    logger.info(
+        "Loading parquet to RAW",
+        table_name=table_name,
+        config_name=config_name,
+        physical_name=physical_name,
+        target_table=full_table,
+        file=file_name
+    )
 
     # CHAQUE THREAD CRÉE SA PROPRE CONNEXION
     conn = psycopg2.connect(settings.postgres_url)
@@ -101,7 +114,7 @@ def load_parquet_to_raw(
             create_sql = f"CREATE TABLE {full_table} ({', '.join(columns_def)})"
             
             logger.info(
-                f"Creating RAW table with {len(columns_metadata)} columns (all TEXT)"
+                f"Creating RAW table: {raw_table_name} with {len(columns_metadata)} columns (all TEXT)"
             )
             
             logger.debug(f"Executing CREATE TABLE")
@@ -147,7 +160,8 @@ def load_parquet_to_raw(
         
         logger.info(
             "RAW loaded successfully", 
-            table=table_name, 
+            table_name=table_name,
+            physical_name=physical_name,
             rows=total_rows
         )
         
@@ -159,7 +173,12 @@ def load_parquet_to_raw(
         return total_rows
 
     except Exception as e:
-        logger.error("RAW load failed", table=table_name, error=str(e))
+        logger.error(
+            "RAW load failed",
+            table_name=table_name,
+            physical_name=physical_name,
+            error=str(e)
+        )
         
         # Update monitoring AVANT rollback
         try:
