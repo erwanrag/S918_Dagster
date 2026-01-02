@@ -348,29 +348,37 @@ def _archive_consolidated_files(
             except Exception as e:
                 logger.warning(f"Failed to archive {src_path}: {e}")
     
-    # 2. Archiver le fichier consolidé + ses métadonnées/status
+    # ✅ 2. ARCHIVER + SUPPRIMER LE FICHIER CONSOLIDÉ
     if consolidated_path and consolidated_path.exists():
         base_name = consolidated_path.stem
         
+        # Fichiers du consolidé
         consolidated_files = {
-            'CONSOL': consolidated_path,
+            'parquet': consolidated_path,
             'metadata': settings.sftp_metadata_dir / f"{base_name}_metadata.json",
             'status': settings.sftp_status_dir / f"{base_name}_status.json"
         }
         
         for file_type, src_path in consolidated_files.items():
             if not src_path.exists():
-                logger.debug(f"Skipping consolidated {file_type} (not found): {src_path.name}")
+                logger.debug(f"Skipping consolidated {file_type}: {src_path.name}")
                 continue
             
             dest_path = archive_dir / src_path.name
             
             try:
+                # ✅ MOVE (pas copy) pour vraiment SUPPRIMER le consolidated
                 src_path.rename(dest_path)
                 size_mb = dest_path.stat().st_size / (1024 * 1024)
                 logger.info(
                     f"📦 {file_type:8s} : {src_path.name:50s} → "
-                    f"{today}/{src_path.name} ({size_mb:6.2f} MB)"
+                    f"{today}/{src_path.name} ({size_mb:6.2f} MB) [CONSOLIDATED]"
                 )
             except Exception as e:
-                logger.warning(f"Failed to archive consolidated {file_type} {src_path}: {e}")
+                logger.warning(f"Failed to archive consolidated {src_path}: {e}")
+                # Si move échoue, au moins supprimer
+                try:
+                    src_path.unlink()
+                    logger.info(f"🗑️  Deleted consolidated: {src_path.name}")
+                except Exception as e2:
+                    logger.error(f"Failed to delete consolidated {src_path}: {e2}")

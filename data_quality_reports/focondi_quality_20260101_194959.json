@@ -1,0 +1,193 @@
+{
+  "table_name": "focondi",
+  "file_path": "/data/sftp_cbmdata01/Incoming/data/parquet/_consolidated/focondi_consolidated_20260101_194854.parquet",
+  "total_rows": 5602,
+  "total_columns": 47,
+  "scan_timestamp": "2026-01-01T19:49:59.692823",
+  "passed": true,
+  "issues": [
+    {
+      "table_name": "focondi",
+      "row_number": 0,
+      "column_name": "coef_ach",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5602 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "focondi",
+      "row_number": 0,
+      "column_name": "coef_vte",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5602 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "focondi",
+      "row_number": 0,
+      "column_name": "px_refv",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5602 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "focondi",
+      "row_number": 0,
+      "column_name": "px_refa",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5602 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "focondi",
+      "row_number": 0,
+      "column_name": "remise1",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5602 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "focondi",
+      "row_number": 0,
+      "column_name": "remise2",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5602 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "focondi",
+      "row_number": 0,
+      "column_name": "remise3",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5602 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "focondi",
+      "row_number": 0,
+      "column_name": "remise4",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5602 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "focondi",
+      "row_number": 0,
+      "column_name": "ord_rem",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5602 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "focondi",
+      "row_number": 0,
+      "column_name": "qte",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5602 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "focondi",
+      "row_number": 0,
+      "column_name": "px_ach",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5602 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "focondi",
+      "row_number": 0,
+      "column_name": "usr_crt",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "328 rows contain '|'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \"|\" (géré automatiquement)"
+    },
+    {
+      "table_name": "focondi",
+      "row_number": 0,
+      "column_name": "usr_mod",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "1533 rows contain '|'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \"|\" (géré automatiquement)"
+    },
+    {
+      "table_name": "focondi",
+      "row_number": 0,
+      "column_name": "typ_rem1",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5602 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "focondi",
+      "row_number": 0,
+      "column_name": "typ_rem2",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5602 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "focondi",
+      "row_number": 0,
+      "column_name": "typ_rem3",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5602 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "focondi",
+      "row_number": 0,
+      "column_name": "typ_rem4",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5602 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "focondi",
+      "row_number": 0,
+      "column_name": "rem_app",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5602 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "focondi",
+      "row_number": 0,
+      "column_name": "qte_rq",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5602 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "focondi",
+      "row_number": 0,
+      "column_name": "grille_rem",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "5602 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    }
+  ],
+  "issue_count": 20,
+  "error_count": 0,
+  "warning_count": 0
+}

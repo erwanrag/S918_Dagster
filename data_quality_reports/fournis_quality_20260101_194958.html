@@ -1,0 +1,372 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Data Quality Report - fournis</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .header { background: #f0f0f0; padding: 20px; border-radius: 5px; }
+        .summary { margin: 20px 0; }
+        .passed { color: green; font-weight: bold; }
+        .failed { color: red; font-weight: bold; }
+        table { border-collapse: collapse; width: 100%; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #4CAF50; color: white; }
+        .error { background-color: #ffebee; }
+        .warning { background-color: #fff3e0; }
+        .info { background-color: #e3f2fd; }
+        pre { background: #f5f5f5; padding: 10px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Data Quality Report</h1>
+        <p><strong>Table:</strong> fournis</p>
+        <p><strong>File:</strong> /data/sftp_cbmdata01/Incoming/data/parquet/_consolidated/fournis_consolidated_20260101_194854.parquet</p>
+        <p><strong>Scan Time:</strong> 2026-01-01T19:49:58.481883</p>
+        <p><strong>Status:</strong> <span class="passed">
+            ✅ PASSED
+        </span></p>
+    </div>
+    
+    <div class="summary">
+        <h2>Summary</h2>
+        <ul>
+            <li>Total Rows: 65</li>
+            <li>Total Columns: 122</li>
+            <li>Issues Found: 41</li>
+            <li>Errors: 0</li>
+            <li>Warnings: 13</li>
+        </ul>
+    </div>
+<h2>Issues by Type</h2><h3>Control Characters (13 occurrences)</h3><table><tr><th>Row</th><th>Column</th><th>Severity</th><th>Sample Value</th><th>Suggestion</th></tr>
+                <tr class="warning">
+                    <td>2</td>
+                    <td>txt_com</td>
+                    <td>WARNING</td>
+                    <td><pre>'Réglement :\n1ére commande : comptant avant livraison\ncommandes suivantes : 30 jours nets, date de fa'</pre></td>
+                    <td>Caractères de contrôle seront remplacés par des espaces</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>7</td>
+                    <td>txt_com</td>
+                    <td>WARNING</td>
+                    <td><pre>'Réglement :\n1ére commande : comptant avant livraison\ncommandes suivantes : 30 jours nets, date de fa'</pre></td>
+                    <td>Caractères de contrôle seront remplacés par des espaces</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>12</td>
+                    <td>txt_com</td>
+                    <td>WARNING</td>
+                    <td><pre>'Réglement :\n1ére commande : comptant avant livraison\ncommandes suivantes : 30 jours nets, date de fa'</pre></td>
+                    <td>Caractères de contrôle seront remplacés par des espaces</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>17</td>
+                    <td>txt_com</td>
+                    <td>WARNING</td>
+                    <td><pre>'Réglement :\n1ére commande : comptant avant livraison\ncommandes suivantes : 30 jours nets, date de fa'</pre></td>
+                    <td>Caractères de contrôle seront remplacés par des espaces</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>22</td>
+                    <td>txt_com</td>
+                    <td>WARNING</td>
+                    <td><pre>'Réglement :\n1ére commande : comptant avant livraison\ncommandes suivantes : 30 jours nets, date de fa'</pre></td>
+                    <td>Caractères de contrôle seront remplacés par des espaces</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>27</td>
+                    <td>txt_com</td>
+                    <td>WARNING</td>
+                    <td><pre>'Réglement :\n1ére commande : comptant avant livraison\ncommandes suivantes : 30 jours nets, date de fa'</pre></td>
+                    <td>Caractères de contrôle seront remplacés par des espaces</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>32</td>
+                    <td>txt_com</td>
+                    <td>WARNING</td>
+                    <td><pre>'Réglement :\n1ére commande : comptant avant livraison\ncommandes suivantes : 30 jours nets, date de fa'</pre></td>
+                    <td>Caractères de contrôle seront remplacés par des espaces</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>37</td>
+                    <td>txt_com</td>
+                    <td>WARNING</td>
+                    <td><pre>'Réglement :\n1ére commande : comptant avant livraison\ncommandes suivantes : 30 jours nets, date de fa'</pre></td>
+                    <td>Caractères de contrôle seront remplacés par des espaces</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>42</td>
+                    <td>txt_com</td>
+                    <td>WARNING</td>
+                    <td><pre>'Réglement :\n1ére commande : comptant avant livraison\ncommandes suivantes : 30 jours nets, date de fa'</pre></td>
+                    <td>Caractères de contrôle seront remplacés par des espaces</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>47</td>
+                    <td>txt_com</td>
+                    <td>WARNING</td>
+                    <td><pre>'Réglement :\n1ére commande : comptant avant livraison\ncommandes suivantes : 30 jours nets, date de fa'</pre></td>
+                    <td>Caractères de contrôle seront remplacés par des espaces</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>52</td>
+                    <td>txt_com</td>
+                    <td>WARNING</td>
+                    <td><pre>'Réglement :\n1ére commande : comptant avant livraison\ncommandes suivantes : 30 jours nets, date de fa'</pre></td>
+                    <td>Caractères de contrôle seront remplacés par des espaces</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>57</td>
+                    <td>txt_com</td>
+                    <td>WARNING</td>
+                    <td><pre>'Réglement :\n1ére commande : comptant avant livraison\ncommandes suivantes : 30 jours nets, date de fa'</pre></td>
+                    <td>Caractères de contrôle seront remplacés par des espaces</td>
+                </tr>
+                
+                <tr class="warning">
+                    <td>62</td>
+                    <td>txt_com</td>
+                    <td>WARNING</td>
+                    <td><pre>'Réglement :\n1ére commande : comptant avant livraison\ncommandes suivantes : 30 jours nets, date de fa'</pre></td>
+                    <td>Caractères de contrôle seront remplacés par des espaces</td>
+                </tr>
+                </table><h3>Delimiter In Data (28 occurrences)</h3><table><tr><th>Row</th><th>Column</th><th>Severity</th><th>Sample Value</th><th>Suggestion</th></tr>
+                <tr class="info">
+                    <td>N/A</td>
+                    <td>coef_ach</td>
+                    <td>INFO</td>
+                    <td><pre>65 rows contain ';'</pre></td>
+                    <td>Colonne contient le délimiteur ";" (géré automatiquement)</td>
+                </tr>
+                
+                <tr class="info">
+                    <td>N/A</td>
+                    <td>del_liv</td>
+                    <td>INFO</td>
+                    <td><pre>65 rows contain ';'</pre></td>
+                    <td>Colonne contient le délimiteur ";" (géré automatiquement)</td>
+                </tr>
+                
+                <tr class="info">
+                    <td>N/A</td>
+                    <td>cal_cde</td>
+                    <td>INFO</td>
+                    <td><pre>65 rows contain ';'</pre></td>
+                    <td>Colonne contient le délimiteur ";" (géré automatiquement)</td>
+                </tr>
+                
+                <tr class="info">
+                    <td>N/A</td>
+                    <td>h_lim_cde</td>
+                    <td>INFO</td>
+                    <td><pre>65 rows contain ';'</pre></td>
+                    <td>Colonne contient le délimiteur ";" (géré automatiquement)</td>
+                </tr>
+                
+                <tr class="info">
+                    <td>N/A</td>
+                    <td>cal_liv</td>
+                    <td>INFO</td>
+                    <td><pre>65 rows contain ';'</pre></td>
+                    <td>Colonne contient le délimiteur ";" (géré automatiquement)</td>
+                </tr>
+                
+                <tr class="info">
+                    <td>N/A</td>
+                    <td>h_lim_liv</td>
+                    <td>INFO</td>
+                    <td><pre>65 rows contain ';'</pre></td>
+                    <td>Colonne contient le délimiteur ";" (géré automatiquement)</td>
+                </tr>
+                
+                <tr class="info">
+                    <td>N/A</td>
+                    <td>del_appro</td>
+                    <td>INFO</td>
+                    <td><pre>65 rows contain ';'</pre></td>
+                    <td>Colonne contient le délimiteur ";" (géré automatiquement)</td>
+                </tr>
+                
+                <tr class="info">
+                    <td>N/A</td>
+                    <td>relik</td>
+                    <td>INFO</td>
+                    <td><pre>65 rows contain ';'</pre></td>
+                    <td>Colonne contient le délimiteur ";" (géré automatiquement)</td>
+                </tr>
+                
+                <tr class="info">
+                    <td>N/A</td>
+                    <td>zal</td>
+                    <td>INFO</td>
+                    <td><pre>65 rows contain ';'</pre></td>
+                    <td>Colonne contient le délimiteur ";" (géré automatiquement)</td>
+                </tr>
+                
+                <tr class="info">
+                    <td>N/A</td>
+                    <td>znu</td>
+                    <td>INFO</td>
+                    <td><pre>65 rows contain ';'</pre></td>
+                    <td>Colonne contient le délimiteur ";" (géré automatiquement)</td>
+                </tr>
+                
+                <tr class="info">
+                    <td>N/A</td>
+                    <td>zta</td>
+                    <td>INFO</td>
+                    <td><pre>65 rows contain ';'</pre></td>
+                    <td>Colonne contient le délimiteur ";" (géré automatiquement)</td>
+                </tr>
+                
+                <tr class="info">
+                    <td>N/A</td>
+                    <td>coef_vte</td>
+                    <td>INFO</td>
+                    <td><pre>65 rows contain ';'</pre></td>
+                    <td>Colonne contient le délimiteur ";" (géré automatiquement)</td>
+                </tr>
+                
+                <tr class="info">
+                    <td>N/A</td>
+                    <td>zlo</td>
+                    <td>INFO</td>
+                    <td><pre>65 rows contain ';'</pre></td>
+                    <td>Colonne contient le délimiteur ";" (géré automatiquement)</td>
+                </tr>
+                
+                <tr class="info">
+                    <td>N/A</td>
+                    <td>jr_app</td>
+                    <td>INFO</td>
+                    <td><pre>65 rows contain ';'</pre></td>
+                    <td>Colonne contient le délimiteur ";" (géré automatiquement)</td>
+                </tr>
+                
+                <tr class="info">
+                    <td>N/A</td>
+                    <td>clas_fc</td>
+                    <td>INFO</td>
+                    <td><pre>65 rows contain ';'</pre></td>
+                    <td>Colonne contient le délimiteur ";" (géré automatiquement)</td>
+                </tr>
+                
+                <tr class="info">
+                    <td>N/A</td>
+                    <td>remise1</td>
+                    <td>INFO</td>
+                    <td><pre>65 rows contain ';'</pre></td>
+                    <td>Colonne contient le délimiteur ";" (géré automatiquement)</td>
+                </tr>
+                
+                <tr class="info">
+                    <td>N/A</td>
+                    <td>remise2</td>
+                    <td>INFO</td>
+                    <td><pre>65 rows contain ';'</pre></td>
+                    <td>Colonne contient le délimiteur ";" (géré automatiquement)</td>
+                </tr>
+                
+                <tr class="info">
+                    <td>N/A</td>
+                    <td>remise3</td>
+                    <td>INFO</td>
+                    <td><pre>65 rows contain ';'</pre></td>
+                    <td>Colonne contient le délimiteur ";" (géré automatiquement)</td>
+                </tr>
+                
+                <tr class="info">
+                    <td>N/A</td>
+                    <td>remise4</td>
+                    <td>INFO</td>
+                    <td><pre>65 rows contain ';'</pre></td>
+                    <td>Colonne contient le délimiteur ";" (géré automatiquement)</td>
+                </tr>
+                
+                <tr class="info">
+                    <td>N/A</td>
+                    <td>ord_rem</td>
+                    <td>INFO</td>
+                    <td><pre>65 rows contain ';'</pre></td>
+                    <td>Colonne contient le délimiteur ";" (géré automatiquement)</td>
+                </tr>
+                
+                <tr class="info">
+                    <td>N/A</td>
+                    <td>interloc</td>
+                    <td>INFO</td>
+                    <td><pre>65 rows contain ';'</pre></td>
+                    <td>Colonne contient le délimiteur ";" (géré automatiquement)</td>
+                </tr>
+                
+                <tr class="info">
+                    <td>N/A</td>
+                    <td>adresse</td>
+                    <td>INFO</td>
+                    <td><pre>65 rows contain ';'</pre></td>
+                    <td>Colonne contient le délimiteur ";" (géré automatiquement)</td>
+                </tr>
+                
+                <tr class="info">
+                    <td>N/A</td>
+                    <td>typ_rem1</td>
+                    <td>INFO</td>
+                    <td><pre>65 rows contain ';'</pre></td>
+                    <td>Colonne contient le délimiteur ";" (géré automatiquement)</td>
+                </tr>
+                
+                <tr class="info">
+                    <td>N/A</td>
+                    <td>typ_rem2</td>
+                    <td>INFO</td>
+                    <td><pre>65 rows contain ';'</pre></td>
+                    <td>Colonne contient le délimiteur ";" (géré automatiquement)</td>
+                </tr>
+                
+                <tr class="info">
+                    <td>N/A</td>
+                    <td>typ_rem3</td>
+                    <td>INFO</td>
+                    <td><pre>65 rows contain ';'</pre></td>
+                    <td>Colonne contient le délimiteur ";" (géré automatiquement)</td>
+                </tr>
+                
+                <tr class="info">
+                    <td>N/A</td>
+                    <td>typ_rem4</td>
+                    <td>INFO</td>
+                    <td><pre>65 rows contain ';'</pre></td>
+                    <td>Colonne contient le délimiteur ";" (géré automatiquement)</td>
+                </tr>
+                
+                <tr class="info">
+                    <td>N/A</td>
+                    <td>rem_app</td>
+                    <td>INFO</td>
+                    <td><pre>65 rows contain ';'</pre></td>
+                    <td>Colonne contient le délimiteur ";" (géré automatiquement)</td>
+                </tr>
+                
+                <tr class="info">
+                    <td>N/A</td>
+                    <td>grille_rem</td>
+                    <td>INFO</td>
+                    <td><pre>65 rows contain ';'</pre></td>
+                    <td>Colonne contient le délimiteur ";" (géré automatiquement)</td>
+                </tr>
+                </table>
+</body>
+</html>

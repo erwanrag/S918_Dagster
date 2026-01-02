@@ -1,0 +1,238 @@
+{
+  "table_name": "client",
+  "file_path": "/data/sftp_cbmdata01/Incoming/data/parquet/_consolidated/client_consolidated_20260101_194854.parquet",
+  "total_rows": 291,
+  "total_columns": 219,
+  "scan_timestamp": "2026-01-01T19:49:57.393724",
+  "passed": true,
+  "issues": [
+    {
+      "table_name": "client",
+      "row_number": 0,
+      "column_name": "zal",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "291 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "client",
+      "row_number": 0,
+      "column_name": "znu",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "291 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "client",
+      "row_number": 0,
+      "column_name": "zta",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "291 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "client",
+      "row_number": 0,
+      "column_name": "div_fac",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "291 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "client",
+      "row_number": 0,
+      "column_name": "val_fac",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "291 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "client",
+      "row_number": 0,
+      "column_name": "fam_art",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "291 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "client",
+      "row_number": 0,
+      "column_name": "mnt_rlk",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "291 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "client",
+      "row_number": 0,
+      "column_name": "commerc",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "291 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "client",
+      "row_number": 0,
+      "column_name": "rem_glo",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "291 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "client",
+      "row_number": 0,
+      "column_name": "arr_bi",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "291 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "client",
+      "row_number": 0,
+      "column_name": "arr_bs",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "291 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "client",
+      "row_number": 0,
+      "column_name": "arr_r",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "291 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "client",
+      "row_number": 0,
+      "column_name": "zlo",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "291 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "client",
+      "row_number": 0,
+      "column_name": "int_rrr",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "291 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "client",
+      "row_number": 0,
+      "column_name": "ben_rrr",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "291 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "client",
+      "row_number": 0,
+      "column_name": "interv",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "291 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "client",
+      "row_number": 0,
+      "column_name": "f_verifcde",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "291 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "client",
+      "row_number": 0,
+      "column_name": "qui_stn",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "291 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "client",
+      "row_number": 0,
+      "column_name": "interloc",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "291 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "client",
+      "row_number": 0,
+      "column_name": "adresse",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "291 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "client",
+      "row_number": 0,
+      "column_name": "tar_fil",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "291 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "client",
+      "row_number": 0,
+      "column_name": "tar_cum",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "291 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "client",
+      "row_number": 0,
+      "column_name": "tar_fi2",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "291 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "client",
+      "row_number": 0,
+      "column_name": "tar_cu2",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "291 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "client",
+      "row_number": 0,
+      "column_name": "hr_app",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "291 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    }
+  ],
+  "issue_count": 25,
+  "error_count": 0,
+  "warning_count": 0
+}

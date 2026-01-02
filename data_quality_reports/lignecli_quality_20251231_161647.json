@@ -1,0 +1,211 @@
+{
+  "table_name": "lignecli",
+  "file_path": "/data/sftp_cbmdata01/Incoming/data/parquet/lignecli_20251231_161036.parquet",
+  "total_rows": 10000,
+  "total_columns": 346,
+  "scan_timestamp": "2025-12-31T16:16:47.647527",
+  "passed": true,
+  "issues": [
+    {
+      "table_name": "lignecli",
+      "row_number": 528,
+      "column_name": "nom_pro",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "CONTACTEUR BASCULANT \"V1-V2\"",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "lignecli",
+      "row_number": 4744,
+      "column_name": "refext",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "4.VP1\"SP.241*241",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "lignecli",
+      "row_number": 0,
+      "column_name": "zal",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "10000 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "lignecli",
+      "row_number": 0,
+      "column_name": "znu",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "10000 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "lignecli",
+      "row_number": 0,
+      "column_name": "zta",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "10000 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "lignecli",
+      "row_number": 0,
+      "column_name": "niv_pha",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "10000 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "lignecli",
+      "row_number": 0,
+      "column_name": "commerc",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "10000 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "lignecli",
+      "row_number": 0,
+      "column_name": "zda",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "1556 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "lignecli",
+      "row_number": 0,
+      "column_name": "coef_mar",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "10000 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "lignecli",
+      "row_number": 0,
+      "column_name": "zlo",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "10000 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "lignecli",
+      "row_number": 0,
+      "column_name": "typ_rem",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "10000 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "lignecli",
+      "row_number": 0,
+      "column_name": "zon_lib",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "10000 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "lignecli",
+      "row_number": 0,
+      "column_name": "ord_rem",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "10000 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "lignecli",
+      "row_number": 0,
+      "column_name": "rem_val",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "10000 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "lignecli",
+      "row_number": 0,
+      "column_name": "cond_rem",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "10000 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "lignecli",
+      "row_number": 0,
+      "column_name": "list_rem",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "10000 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "lignecli",
+      "row_number": 0,
+      "column_name": "df_tax",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "10000 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "lignecli",
+      "row_number": 0,
+      "column_name": "df_vte",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "10000 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "lignecli",
+      "row_number": 0,
+      "column_name": "df_rvt",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "10000 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "lignecli",
+      "row_number": 0,
+      "column_name": "df_mul",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "10000 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "lignecli",
+      "row_number": 0,
+      "column_name": "tare_p",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "10000 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    },
+    {
+      "table_name": "lignecli",
+      "row_number": 0,
+      "column_name": "tare_ul",
+      "issue_type": "delimiter_in_data",
+      "value_sample": "10000 rows contain ';'",
+      "severity": "info",
+      "suggestion": "Colonne contient le délimiteur \";\" (géré automatiquement)"
+    }
+  ],
+  "issue_count": 22,
+  "error_count": 0,
+  "warning_count": 2
+}

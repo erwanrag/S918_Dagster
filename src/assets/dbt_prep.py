@@ -1,3 +1,4 @@
+# src/assets/dbt_prep.py
 """
 ============================================================================
 dbt PREP Assets - Modèles de préparation pour analytics
@@ -24,16 +25,14 @@ class CustomDbtTranslator(DagsterDbtTranslator):
     
     def get_upstream_asset_keys(self, dbt_resource_props):
         """Déclarer que dbt dépend de ods_tables"""
-        # Par défaut, récupérer les dépendances dbt normales
         upstream = super().get_upstream_asset_keys(dbt_resource_props)
-        
-        # Ajouter dépendance explicite vers ods_tables
         return upstream | {AssetKey("ods_tables")}
 
 
 @dbt_assets(
     manifest=DBT_MANIFEST_PATH,
-    dagster_dbt_translator=CustomDbtTranslator()
+    dagster_dbt_translator=CustomDbtTranslator(),
+    # ❌ RETIRER partitions_def pour l'instant
 )
 def dbt_prep_models(context: AssetExecutionContext, dbt: DbtCliResource):
     """

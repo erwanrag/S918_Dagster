@@ -2,7 +2,9 @@
 ============================================================================
 Assets ODS - STAGING → ODS avec SCD2 (historisation)
 ============================================================================
-FIX: Utilise config_name pour chercher metadata (pour tables lisval)
+CORRECTIONS:
+1. Utilise config_name pour chercher metadata (pour tables lisval)
+2. ✅ RETRAIT partitions_def pour cohérence avec le pipeline
 ============================================================================
 """
 
@@ -17,6 +19,7 @@ from src.core.staging.extent import get_extent_columns
     name="ods_tables",
     group_name="ods",
     required_resource_keys={"postgres"},
+    # ❌ PARTITIONS RETIRÉES pour cohérence avec le pipeline non-partitionné
     description="""
     Tables ODS consolidées avec SCD2 (historisation complète).
 

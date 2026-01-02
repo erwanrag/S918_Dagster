@@ -1,0 +1,220 @@
+{
+  "table_name": "lldespro",
+  "file_path": "/data/sftp_cbmdata01/Incoming/data/parquet/lldespro_20251231_161534.parquet",
+  "total_rows": 10000,
+  "total_columns": 6,
+  "scan_timestamp": "2025-12-31T16:16:36.023142",
+  "passed": true,
+  "issues": [
+    {
+      "table_name": "lldespro",
+      "row_number": 224,
+      "column_name": "des_lan",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "\"ADAPTER MF 3/4\"\" UNF-14X150\"",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "lldespro",
+      "row_number": 228,
+      "column_name": "des_lan",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "\"ADAPTER MF 3/4\"\" UNF-14X150\"",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "lldespro",
+      "row_number": 2218,
+      "column_name": "des_lan",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "\"SPOJKA KOLENO 90Â° 1\"\"1/16 JIC\"",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "lldespro",
+      "row_number": 2222,
+      "column_name": "des_lan",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "\"SPOJKA KOLENO 90° 1\"\"1/16 JIC\"",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "lldespro",
+      "row_number": 2234,
+      "column_name": "des_lan",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "\"KOLENO 13/16 - 3/8\"\"\"",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "lldespro",
+      "row_number": 2238,
+      "column_name": "des_lan",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "\"KOLENO 13/16 - 3/8\"\"\"",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "lldespro",
+      "row_number": 2250,
+      "column_name": "des_lan",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "\"KOLENO 10/14 3/8\"\" NTA 1424\"",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "lldespro",
+      "row_number": 2254,
+      "column_name": "des_lan",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "\"KOLENO 10/14 3/8\"\" NTA 1424\"",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "lldespro",
+      "row_number": 2364,
+      "column_name": "des_lan",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "\"KOLENO 90D 90MM 1/2\"\"\"",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "lldespro",
+      "row_number": 2368,
+      "column_name": "des_lan",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "\"KOLENO 90D 90MM 1/2\"\"\"",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "lldespro",
+      "row_number": 2481,
+      "column_name": "des_lan",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "\"KOLENO 8,5/12-3/8\"\"\"",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "lldespro",
+      "row_number": 2485,
+      "column_name": "des_lan",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "\"KOLENO 8,5/12-3/8\"\"\"",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "lldespro",
+      "row_number": 2558,
+      "column_name": "des_lan",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "\"KOLENO 90Â° 1/2\"\" N.92\"",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "lldespro",
+      "row_number": 2562,
+      "column_name": "des_lan",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "\"KOLENO 90° 1/2\"\" N.92\"",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "lldespro",
+      "row_number": 2613,
+      "column_name": "des_lan",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "\"UZAVER 1/2\"\"  VNITRNI SESTIHRAN\"",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "lldespro",
+      "row_number": 2617,
+      "column_name": "des_lan",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "\"UZAVER 1/2\"\"  VNITRNI SESTIHRAN\"",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "lldespro",
+      "row_number": 2857,
+      "column_name": "des_lan",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "\"KULOVY CEP S KONCOVKOU \"\"SAMEC\"\" 1",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "lldespro",
+      "row_number": 2861,
+      "column_name": "des_lan",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "\"KULOVY CEP S KONCOVKOU \"\"SAMEC\"\" 1",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "lldespro",
+      "row_number": 3775,
+      "column_name": "des_lan",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "\"\"\"VIDRO\"\" DE FAROLIM\"",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "lldespro",
+      "row_number": 4191,
+      "column_name": "des_lan",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "\"TLACITKO \"\"ZASTAVIME\"\" SVORKA DOLU",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "lldespro",
+      "row_number": 5408,
+      "column_name": "des_lan",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "\"BRZDOVY VALEC PRAVY ZADNI 4\"\"\"",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "lldespro",
+      "row_number": 5412,
+      "column_name": "des_lan",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "\"BRZDOVY VALEC PRAVY ZADNI 4\"\"\"",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    },
+    {
+      "table_name": "lldespro",
+      "row_number": 7154,
+      "column_name": "des_lan",
+      "issue_type": "unescaped_quotes",
+      "value_sample": "\"\"\"VIDRO\"\" DE FAROLIM\"",
+      "severity": "warning",
+      "suggestion": "Guillemets seront automatiquement échappés lors du chargement"
+    }
+  ],
+  "issue_count": 23,
+  "error_count": 0,
+  "warning_count": 23
+}
