@@ -94,6 +94,6 @@ scripts/
 data_quality_reports/
 
 # Coverage
-htmlcov/
 .coverage
-.coverage.*
+coverage.xml
+htmlcov/
