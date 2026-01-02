@@ -1,13 +1,15 @@
 """
 ============================================================================
-Assets STAGING - RAW → STAGING avec éclatement EXTENT
-============================================================================
-FIX: Utilise config_name pour chercher metadata (pour tables lisval)
+Assets STAGING - RAW → STAGING avec AssetMaterializations riches
 ============================================================================
 """
 
-from dagster import AssetExecutionContext, asset, AssetIn
+from dagster import AssetExecutionContext, asset, AssetIn, Output
 from tenacity import retry, stop_after_attempt, wait_fixed, RetryError
+import time
+
+# ✅ IMPORT MATERIALIZATION
+from src.core.materialization import MaterializationBuilder, AssetLayer
 
 from src.core.staging.transformer import create_staging_table, load_raw_to_staging
 from src.core.staging.extent import count_expanded_columns, get_extent_columns
@@ -21,28 +23,23 @@ from src.db.metadata import get_table_metadata
     ins={"raw_sftp_tables": AssetIn(key="raw_sftp_tables")},
     description="""
     Tables STAGING normalisées avec éclatement EXTENT.
-
-    Transformations appliquées:
-    • Colonnes EXTENT éclatées avec split_part(colonne, ';', N)
-    • Colonnes ETL (_etl_run_id, _etl_valid_from)
-
-    Exemple transformation EXTENT:
-    - RAW : znu TEXT = "123.45;0;0;0;0"
-    - STAGING : znu_1="123.45", znu_2="0", znu_3="0", znu_4="0", znu_5="0"
+    Génère AssetMaterializations détaillées avec métriques de transformation.
     """,
 )
 def staging_tables(
     context: AssetExecutionContext,
     raw_sftp_tables: dict,
 ) -> dict:
-    """Transform RAW → STAGING avec éclatement EXTENT"""
+    """Transform RAW → STAGING avec AssetMaterializations riches"""
     
     if not raw_sftp_tables.get("results"):
-        return {
+        # ✅ YIELD Output au lieu de return
+        yield Output({
             "results": [], 
             "total_rows": 0, 
             "run_id": raw_sftp_tables.get("run_id", "empty")
-        }
+        })
+        return
     
     run_id = raw_sftp_tables["run_id"]
     context.log.info(f"Starting STAGING transformation with run_id: {run_id}")
@@ -51,14 +48,18 @@ def staging_tables(
     total_rows = 0
     total_extent_columns_expanded = 0
 
-    # ✅ BOUCLE FOR
+    # BOUCLE FOR
     for table_info in raw_sftp_tables["results"]:
+        # ✅ TRACKING TEMPS PAR TABLE
+        table_start = time.time()
+        
         table_name = table_info["table"]
-        config_name = table_info.get("config_name")  # ✅ RÉCUPÉRER config_name
+        config_name = table_info.get("config_name")
         physical_name = table_info.get("physical_name", table_name)
         load_mode = table_info.get("mode", "FULL")
+        raw_rows = table_info.get("rows", 0)  # ✅ Rows depuis RAW
         
-        # ✅ CRÉER UNE VRAIE NOUVELLE CONNEXION
+        # CRÉER NOUVELLE CONNEXION
         import psycopg2
         import os
         
@@ -73,10 +74,10 @@ def staging_tables(
             )
             conn.autocommit = False
             
-            # ✅ Récupérer métadonnées avec config_name si présent
+            # Récupérer métadonnées
             metadata = get_table_metadata(conn, table_name, config_name=config_name)
             if not metadata:
-                context.log.warning(f"No metadata found for {table_name} (config: {config_name}), skipping")
+                context.log.warning(f"No metadata for {table_name} (config: {config_name}), skipping")
                 conn.rollback()
                 conn.close()
                 continue
@@ -84,14 +85,16 @@ def staging_tables(
             columns_metadata = metadata["columns"]
             extent_cols = get_extent_columns(columns_metadata)
             total_cols_expanded = count_expanded_columns(columns_metadata)
+            base_cols_count = len(columns_metadata)
+            extent_cols_count = len(extent_cols)
             
             if extent_cols:
                 context.log.info(
-                    f"[{physical_name}] EXTENT columns: {len(extent_cols)} "
+                    f"[{physical_name}] EXTENT columns: {extent_cols_count} "
                     f"→ {total_cols_expanded} columns after split_part()"
                 )
             
-            # ✅ FONCTION RETRY
+            # FONCTION RETRY
             @retry(stop=stop_after_attempt(2), wait=wait_fixed(3))
             def process_table_with_retry():
                 create_staging_table(table_name, load_mode, conn, config_name=config_name)
@@ -101,27 +104,68 @@ def staging_tables(
                     run_id=run_id,
                     load_mode=load_mode,
                     conn=conn,
-                    config_name=config_name  # ✅ Passer config_name
+                    config_name=config_name
                 )
             
             # Exécuter avec retry
             rows = process_table_with_retry()
             
-            # ✅ COMMIT IMMÉDIAT
+            # COMMIT IMMÉDIAT
             conn.commit()
             conn.close()
             
+            # ✅ CALCUL DURATION
+            table_duration = time.time() - table_start
+            
             total_rows += rows
-            total_extent_columns_expanded += (total_cols_expanded - len(columns_metadata))
+            extent_expanded_count = total_cols_expanded - base_cols_count
+            total_extent_columns_expanded += extent_expanded_count
+            
+            # ✅ CRÉER MATERIALIZATION STAGING
+            builder = MaterializationBuilder(AssetLayer.STAGING, physical_name)
+            
+            # Volumétrie (avec source_rows depuis RAW)
+            builder.with_volumetry(
+                rows_loaded=rows,
+                rows_failed=0,
+                source_rows=raw_rows  # ✅ Comparaison RAW vs STAGING
+            )
+            
+            builder.with_performance(table_duration)
+            builder.with_load_mode(load_mode)
+            
+            # ✅ MÉTADONNÉES SPÉCIFIQUES STAGING
+            builder.metadata.update({
+                "base_columns": base_cols_count,
+                "extent_columns": extent_cols_count,
+                "total_columns_after_expansion": total_cols_expanded,
+                "extent_columns_added": extent_expanded_count,
+            })
+            
+            # ✅ DÉTAILS TRANSFORMATIONS
+            transformations = []
+            if extent_cols_count > 0:
+                transformations.append(
+                    f"EXTENT explosion: {extent_cols_count} cols → {total_cols_expanded} cols"
+                )
+            transformations.append("Added _etl_run_id column")
+            transformations.append("Added _etl_valid_from timestamp")
+            
+            builder.metadata["transformations_applied"] = "\n".join(
+                f"• {t}" for t in transformations
+            )
+            
+            # ✅ YIELD MATERIALIZATION
+            yield builder.build()
             
             results.append({
                 "table": table_name,
-                "config_name": config_name,  # ✅ Inclure config_name
+                "config_name": config_name,
                 "physical_name": physical_name,
                 "rows": rows,
                 "mode": load_mode,
-                "base_columns": len(columns_metadata),
-                "extent_columns": len(extent_cols),
+                "base_columns": base_cols_count,
+                "extent_columns": extent_cols_count,
                 "total_columns_expanded": total_cols_expanded,
             })
             
@@ -135,6 +179,15 @@ def staging_tables(
             context.log.error(
                 f"❌ STAGING failed after retries for {physical_name}: {last_error}"
             )
+            
+            # ✅ MATERIALIZATION D'ÉCHEC
+            table_duration = time.time() - table_start
+            builder = MaterializationBuilder(AssetLayer.STAGING, physical_name)
+            builder.with_volumetry(0, 0)
+            builder.with_performance(table_duration)
+            builder.with_error(str(last_error))
+            yield builder.build()
+            
             continue
             
         except Exception as e:
@@ -142,6 +195,15 @@ def staging_tables(
                 conn.rollback()
                 conn.close()
             context.log.error(f"❌ STAGING failed for {physical_name}: {str(e)}")
+            
+            # ✅ MATERIALIZATION D'ÉCHEC
+            table_duration = time.time() - table_start
+            builder = MaterializationBuilder(AssetLayer.STAGING, physical_name)
+            builder.with_volumetry(0, 0)
+            builder.with_performance(table_duration)
+            builder.with_error(str(e))
+            yield builder.build()
+            
             continue
     
     # ================================================================
@@ -180,10 +242,10 @@ def staging_tables(
         "run_id": run_id,
     })
 
-    return {
+    yield Output({
         "tables_processed": len(results),
         "total_rows": total_rows,
         "results": results,
         "run_id": run_id,
         "total_extent_columns_expanded": total_extent_columns_expanded,
-    }
+    })

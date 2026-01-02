@@ -1,14 +1,16 @@
 """
 ============================================================================
-Assets Ingestion - SFTP INVENTORY (scan + enrichissement + consolidation)
-============================================================================
-FIX: Gère les listes retournées par handle_duplicate_files (tables multi-config)
+Assets Ingestion - SFTP INVENTORY avec AssetMaterializations riches
 ============================================================================
 """
 
 from pathlib import Path
 from datetime import datetime
-from dagster import AssetExecutionContext, Config, asset
+from dagster import AssetExecutionContext, Config, asset, Output  # ✅ Ajouter Output
+import time
+
+# ✅ IMPORT MATERIALIZATION
+from src.core.materialization import MaterializationBuilder, AssetLayer
 
 from src.core.sftp.scanner import scan_parquet_files
 from src.core.sftp.consolidator import handle_duplicate_files
@@ -34,12 +36,10 @@ def sftp_parquet_inventory(
 ) -> list[dict]:
     """
     Scan SFTP, consolide doublons, enrichit avec métadonnées PostgreSQL.
-    
-    Strategy:
-    - FULL/FULL_RESET : Garde dernier fichier, archive le reste
-    - INCREMENTAL : Consolide tous les fichiers en un seul
-    - Multi-config tables (lisval) : Retourne tous les fichiers séparément
+    Génère AssetMaterializations par table découverte.
     """
+    start_time = time.time()
+    
     settings = get_settings()
     
     context.log.info("Starting SFTP scan...")
@@ -47,7 +47,8 @@ def sftp_parquet_inventory(
 
     if not all_files:
         context.log.warning("No files discovered on SFTP")
-        return []
+        yield Output([])  # ✅ yield Output au lieu de return
+        return  # ✅ Sortir après yield
 
     context.log.info(f"Discovered {len(all_files)} parquet file(s)")
 
@@ -71,7 +72,6 @@ def sftp_parquet_inventory(
     final_files = []
     
     for table_name, file_list in files_by_table.items():
-        # Filtrage optionnel
         if config.tables and table_name not in config.tables:
             context.log.debug(f"Skipping {table_name} (not in filter)")
             continue
@@ -79,9 +79,6 @@ def sftp_parquet_inventory(
         if len(file_list) == 1:
             final_files.append(file_list[0])
         else:
-            # ✅ handle_duplicate_files retourne maintenant une LISTE
-            # - Pour tables multi-config (lisval) : liste de N fichiers
-            # - Pour tables normales : liste de 1 fichier (consolidé ou dernier)
             result_files = handle_duplicate_files(
                 table_name=table_name,
                 file_list=file_list,
@@ -89,7 +86,6 @@ def sftp_parquet_inventory(
                 superseded_dir=superseded_dir,
                 logger=context.log
             )
-            # ✅ Ajouter TOUS les fichiers de la liste
             final_files.extend(result_files)
 
     context.log.info(
@@ -98,23 +94,26 @@ def sftp_parquet_inventory(
     )
 
     # =========================================================================
-    # 3. ENRICHIR AVEC MÉTADONNÉES POSTGRESQL
+    # 3. ENRICHIR AVEC MÉTADONNÉES + MATERIALIZATIONS
     # =========================================================================
     enriched_files = []
+    tables_stats = {}
 
     with context.resources.postgres.get_connection() as conn:
         for file in final_files:
-            # ✅ Gérer à la fois les objets FileInfo et les dicts (fichiers consolidés)
+            file_start = time.time()
+            
             if isinstance(file, dict):
                 table_name = file['table_name']
-                config_name = file.get('config_name')  # ✅ Récupérer config_name
+                config_name = file.get('config_name')
                 file_dict = file
+                file_path = Path(file['path'])
             else:
                 table_name = file.table_name
-                config_name = getattr(file, 'config_name', None)  # ✅ Récupérer config_name
+                config_name = getattr(file, 'config_name', None)
                 file_dict = file.to_dict()
+                file_path = Path(file.path)
             
-            # ✅ Récupérer métadonnées avec config_name
             table_meta = get_table_metadata(conn, table_name, config_name=config_name)
 
             if table_meta:
@@ -122,9 +121,8 @@ def sftp_parquet_inventory(
                 file_dict["has_timestamps"] = table_meta["has_timestamps"]
                 file_dict["force_full"] = table_meta["force_full"]
                 file_dict["table_description"] = table_meta.get("description", "")
-                file_dict["columns"] = table_meta["columns"]  # ✅ Ajouter colonnes
+                file_dict["columns"] = table_meta["columns"]
 
-                # Override load_mode si force_full
                 if table_meta["force_full"]:
                     file_dict["load_mode"] = LoadMode.FULL.value
                     context.log.info(f"{table_name}: force_full=True → FULL mode")
@@ -139,16 +137,61 @@ def sftp_parquet_inventory(
                 context.log.warning(f"{table_name}: No metadata found in PostgreSQL")
 
             enriched_files.append(file_dict)
+            
+            file_size_mb = file_path.stat().st_size / (1024 ** 2) if file_path.exists() else 0
+            is_consolidated = 'original_files' in file_dict
+            original_count = len(file_dict['original_files']) if is_consolidated else 1
+            column_count = len(file_dict.get('columns', []))
+            
+            file_duration = time.time() - file_start
+            
+            physical_name = file_dict.get('physical_name', table_name)
+            
+            builder = MaterializationBuilder(AssetLayer.INGESTION, physical_name)
+            builder.with_source(str(file_path), file_size_mb)
+            builder.with_load_mode(file_dict['load_mode'])
+            builder.with_performance(file_duration)
+            
+            builder.metadata.update({
+                "file_discovered": True,
+                "column_count": column_count,
+                "has_primary_keys": len(file_dict.get('primary_keys', [])) > 0,
+                "has_timestamps": file_dict.get('has_timestamps', False),
+            })
+            
+            if is_consolidated:
+                builder.with_consolidation_info(
+                    is_consolidated=True,
+                    original_files_count=original_count
+                )
+            
+            # ✅ YIELD MATERIALIZATION
+            yield builder.build()
+            
+            load_mode = file_dict['load_mode']
+            if load_mode not in tables_stats:
+                tables_stats[load_mode] = {"count": 0, "total_size_mb": 0}
+            tables_stats[load_mode]["count"] += 1
+            tables_stats[load_mode]["total_size_mb"] += file_size_mb
 
     # =========================================================================
     # 4. RÉSUMÉ
     # =========================================================================
+    total_duration = time.time() - start_time
+    
     context.log.info("=" * 80)
     context.log.info("SFTP INVENTORY SUMMARY")
     context.log.info("=" * 80)
     context.log.info(f"Total discovered      : {len(all_files)}")
     context.log.info(f"After consolidation   : {len(enriched_files)}")
-    context.log.info(f"Skipped (filter)      : {len(all_files) - len(files_by_table) if config.tables else 0}")
+    context.log.info(f"Duration              : {total_duration:.2f}s")
+    context.log.info("")
+    
+    for mode, stats in tables_stats.items():
+        context.log.info(
+            f"{mode:12s} : {stats['count']} files ({stats['total_size_mb']:.2f} MB)"
+        )
+    
     context.log.info("=" * 80)
     
     for file_dict in enriched_files:
@@ -168,5 +211,14 @@ def sftp_parquet_inventory(
             )
     
     context.log.info("=" * 80)
+    
+    context.add_output_metadata({
+        "files_discovered": len(all_files),
+        "files_after_consolidation": len(enriched_files),
+        "duration_seconds": round(total_duration, 2),
+        "full_mode_count": tables_stats.get("FULL", {}).get("count", 0),
+        "incremental_mode_count": tables_stats.get("INCREMENTAL", {}).get("count", 0),
+    })
 
-    return enriched_files
+    # ✅ YIELD Output au lieu de return
+    yield Output(enriched_files)

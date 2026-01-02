@@ -1,21 +1,11 @@
 """
 ============================================================================
-ODS Merger - STAGING → ODS avec SCD2 (historisation + flags)
-============================================================================
-Logique SCD2 complète :
-- _etl_valid_from / _etl_valid_to : Période de validité
-- _etl_is_current : TRUE pour ligne active
-- _etl_is_deleted : TRUE pour ligne supprimée (soft delete)
-
-Modes :
-- INCREMENTAL : INSERT nouvelles + UPDATE modifiées (historisation)
-- FULL : + Détection suppressions (soft delete avec _etl_is_deleted)
-- FULL_RESET : DROP + CREATE + INSERT (initialisation)
+ODS Merger - STAGING → ODS avec SCD2 + STATS DÉTAILLÉES
 ============================================================================
 """
 
 from __future__ import annotations
-from typing import List, Sequence
+from typing import List, Sequence, Dict
 from psycopg2 import sql
 from datetime import datetime
 
@@ -29,7 +19,7 @@ logger = get_logger(__name__)
 
 
 # ---------------------------------------------------------------------------
-# Helpers
+# Helpers (garde ton code existant)
 # ---------------------------------------------------------------------------
 
 def _get_columns(cur, schema: str, table: str) -> List[str]:
@@ -60,10 +50,7 @@ def _create_ods_table_with_scd2(
     ods_table: str, 
     columns_metadata: list[dict]
 ) -> None:
-    """
-    Créer table ODS avec typage strict + colonnes SCD2
-    """
-    # Construire définitions colonnes business avec types stricts
+    """Créer table ODS avec typage strict + colonnes SCD2"""
     ods_columns = build_ods_columns_definition(columns_metadata)
     
     columns_sql = []
@@ -75,17 +62,15 @@ def _create_ods_table_with_scd2(
             )
         )
     
-    # Ajouter colonnes SCD2
     columns_sql.extend([
         sql.SQL('"_etl_valid_from" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP'),
-        sql.SQL('"_etl_valid_to" TIMESTAMP'),  # NULL = ligne courante
+        sql.SQL('"_etl_valid_to" TIMESTAMP'),
         sql.SQL('"_etl_is_current" BOOLEAN NOT NULL DEFAULT TRUE'),
         sql.SQL('"_etl_is_deleted" BOOLEAN NOT NULL DEFAULT FALSE'),
         sql.SQL('"_etl_hashdiff" VARCHAR(32)'),
         sql.SQL('"_etl_run_id" VARCHAR(100)'),
     ])
     
-    # CREATE TABLE
     cur.execute(
         sql.SQL("""
             CREATE TABLE IF NOT EXISTS {}.{} (
@@ -115,7 +100,6 @@ def _create_pk_and_indexes(
     if primary_keys:
         pk_cols = sql.SQL(", ").join(sql.Identifier(c) for c in primary_keys)
         
-        # Index composite PK + _etl_is_current pour requêtes courantes
         try:
             cur.execute(
                 sql.SQL("""
@@ -131,7 +115,6 @@ def _create_pk_and_indexes(
         except Exception as e:
             logger.warning(f"Index creation failed: {e}")
         
-        # Index PK + hashdiff pour UPSERT
         try:
             cur.execute(
                 sql.SQL("""
@@ -147,7 +130,6 @@ def _create_pk_and_indexes(
         except Exception as e:
             logger.warning(f"Index creation failed: {e}")
     
-    # Index sur dates de validité
     try:
         cur.execute(
             sql.SQL("""
@@ -162,7 +144,6 @@ def _create_pk_and_indexes(
     except Exception as e:
         logger.warning(f"Index creation failed: {e}")
     
-    # Index sur _etl_is_current pour requêtes courantes
     try:
         cur.execute(
             sql.SQL("""
@@ -202,7 +183,7 @@ def _pk_join(target_alias: str, source_alias: str, primary_keys: Sequence[str]) 
 
 
 # ---------------------------------------------------------------------------
-# Main
+# Main - ✅ RETOURNE DICT AU LIEU DE INT
 # ---------------------------------------------------------------------------
 
 def merge_staging_to_ods(
@@ -210,22 +191,19 @@ def merge_staging_to_ods(
     run_id: str,
     load_mode: str,
     conn,
-    config_name: str = None,  # ✅ AJOUTER CETTE LIGNE
-) -> int:
+    config_name: str = None,
+) -> Dict[str, int]:  # ✅ CHANGEMENT ICI
     """
     Merger STAGING → ODS avec SCD2 complet
     
-    Logique SCD2 :
-    - INCREMENTAL : Historise les modifications, insère les nouvelles
-    - FULL : + Détecte les suppressions (soft delete)
-    - FULL_RESET : Réinitialisation complète
-    
-    Args:
-        table_name: Nom de la table
-        run_id: ID du run ETL
-        load_mode: Mode de chargement
-        conn: Connexion PostgreSQL
-        config_name: Configuration spécifique (ex: lisval_produits_vehicules)
+    Returns:
+        dict: {
+            "total_rows": int,
+            "new_records": int,        # Vraiment nouvelles PK
+            "updated_records": int,    # PK existantes avec hashdiff différent
+            "closed_records": int,     # Lignes fermées (valid_to mis à jour)
+            "deleted_records": int,    # Soft deletes (FULL mode only)
+        }
     """
     metadata = get_table_metadata(conn, table_name, config_name=config_name)
     if not metadata:
@@ -242,7 +220,6 @@ def merge_staging_to_ods(
     if not primary_keys:
         raise ValueError(f"No primary keys for SCD2: {table_name}")
 
-    # Calculer hashdiff depuis colonnes STAGING
     hashdiff_expr = build_ods_hashdiff(columns_metadata, source_alias="src")
 
     with conn.cursor() as cur:
@@ -259,10 +236,8 @@ def merge_staging_to_ods(
                 .format(sql.Identifier(ods_schema), sql.Identifier(ods_table))
             )
             
-            # CREATE TABLE avec SCD2
             _create_ods_table_with_scd2(cur, ods_schema, ods_table, columns_metadata)
             
-            # INSERT initial avec flags SCD2
             select_with_cast = build_ods_select_with_casting(columns_metadata, "src")
             
             insert_sql = sql.SQL("""
@@ -300,11 +275,18 @@ def merge_staging_to_ods(
             cur.execute(insert_sql, (current_timestamp, run_id))
             rows = cur.rowcount
             
-            # Créer indexes
             _create_pk_and_indexes(cur, ods_schema, ods_table, primary_keys)
             
             logger.info("ODS FULL_RESET done", table=table_name, rows=rows)
-            return rows
+            
+            # ✅ RETOUR DICT
+            return {
+                "total_rows": rows,
+                "new_records": rows,  # Toutes nouvelles en FULL_RESET
+                "updated_records": 0,
+                "closed_records": 0,
+                "deleted_records": 0,
+            }
 
         # ------------------------------------------------------------------
         # Vérifier si table existe
@@ -319,10 +301,8 @@ def merge_staging_to_ods(
         table_exists = cur.fetchone()[0]
         
         if not table_exists:
-            # Créer table avec SCD2
             _create_ods_table_with_scd2(cur, ods_schema, ods_table, columns_metadata)
             
-            # INSERT initial
             select_with_cast = build_ods_select_with_casting(columns_metadata, "src")
             
             insert_sql = sql.SQL("""
@@ -360,17 +340,23 @@ def merge_staging_to_ods(
             cur.execute(insert_sql, (current_timestamp, run_id))
             rows = cur.rowcount
             
-            # Créer indexes
             _create_pk_and_indexes(cur, ods_schema, ods_table, primary_keys)
             
             logger.info("ODS initial load done", table=table_name, rows=rows)
-            return rows
+            
+            # ✅ RETOUR DICT
+            return {
+                "total_rows": rows,
+                "new_records": rows,  # Toutes nouvelles en initial load
+                "updated_records": 0,
+                "closed_records": 0,
+                "deleted_records": 0,
+            }
 
         # ------------------------------------------------------------------
         # Table existe : MERGE SCD2 (INCREMENTAL ou FULL)
         # ------------------------------------------------------------------
         
-        # Calculer hashdiff avec alias "stg" pour les requêtes de merge
         hashdiff_expr_stg = build_ods_hashdiff(columns_metadata, source_alias="stg")
         
         distinct_on = _dedup_distinct_on(primary_keys)
@@ -382,7 +368,12 @@ def merge_staging_to_ods(
             for col in build_ods_columns_definition(columns_metadata)
         )
         
-        rows_closed = rows_inserted = rows_deleted = 0
+        # ✅ TRACKING SÉPARÉ
+        rows_closed = 0
+        rows_inserted = 0
+        rows_new = 0
+        rows_updated = 0
+        rows_deleted = 0
 
         # ------------------------------------------------------------------
         # 1. CLOSE lignes modifiées (UPDATE valid_to + is_current)
@@ -418,10 +409,43 @@ def merge_staging_to_ods(
         
         cur.execute(close_sql, (current_timestamp,))
         rows_closed = cur.rowcount
+        rows_updated = rows_closed  # ✅ Les lignes fermées = mises à jour
 
         # ------------------------------------------------------------------
-        # 2. INSERT nouvelles versions (modifiées + nouvelles)
+        # 2. INSERT nouvelles versions
+        # ✅ ON DISTINGUE "vraiment nouvelles" vs "modifications"
         # ------------------------------------------------------------------
+        
+        # 2a. Compter combien de PK n'existent PAS DU TOUT dans ODS
+        count_new_sql = sql.SQL("""
+            WITH source AS (
+                SELECT DISTINCT ON ({distinct_on})
+                    {pk_cols}
+                FROM {stg_schema}.{stg_table} stg
+                ORDER BY {order_by}
+            )
+            SELECT COUNT(*)
+            FROM source
+            WHERE NOT EXISTS (
+                SELECT 1
+                FROM {ods_schema}.{ods_table} AS target
+                WHERE {pk_join}
+            )
+        """).format(
+            distinct_on=distinct_on,
+            pk_cols=sql.SQL(", ").join(sql.Identifier(pk) for pk in primary_keys),
+            stg_schema=sql.Identifier(stg_schema),
+            stg_table=sql.Identifier(stg_table),
+            order_by=order_by,
+            ods_schema=sql.Identifier(ods_schema),
+            ods_table=sql.Identifier(ods_table),
+            pk_join=pk_join,
+        )
+        
+        cur.execute(count_new_sql)
+        rows_new = cur.fetchone()[0]
+        
+        # 2b. INSERT (nouvelles + réouvertures)
         insert_sql = sql.SQL("""
             WITH source AS (
                 SELECT DISTINCT ON ({distinct_on})
@@ -518,6 +542,8 @@ def merge_staging_to_ods(
             "ODS SCD2 merge completed",
             table=table_name,
             mode=load_mode,
+            new=rows_new,
+            updated=rows_updated,
             closed=rows_closed,
             inserted=rows_inserted,
             deleted=rows_deleted,
@@ -525,4 +551,11 @@ def merge_staging_to_ods(
             run_id=run_id,
         )
 
-        return total
+        # ✅ RETOUR DICT AVEC STATS DÉTAILLÉES
+        return {
+            "total_rows": total,
+            "new_records": rows_new,           # Vraiment nouvelles PK
+            "updated_records": rows_updated,   # PK existantes modifiées
+            "closed_records": rows_closed,     # Lignes fermées (= updated)
+            "deleted_records": rows_deleted,   # Soft deletes
+        }

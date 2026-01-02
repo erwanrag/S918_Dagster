@@ -91,3 +91,9 @@ Services
 storage/
 logs/
 scripts/
+data_quality_reports/
+
+# Coverage
+htmlcov/
+.coverage
+.coverage.*

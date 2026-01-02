@@ -1,5 +1,5 @@
 """
-Definitions Dagster - Version nettoyée
+Definitions Dagster - Version avec sensors
 """
 
 from dagster import Definitions, load_assets_from_modules
@@ -11,8 +11,8 @@ from src.assets import ingestion, raw, staging, ods, services, dbt_prep
 
 from src.jobs.pipelines import (
     full_etl_pipeline,
-    ingestion_pipeline,      # SFTP → RAW → STAGING → ODS
-    raw_pipeline,            # ✅ AJOUTER
+    ingestion_pipeline,
+    raw_pipeline,
     ods_pipeline,
     prep_pipeline,
     services_pipeline,
@@ -22,14 +22,18 @@ from src.jobs.auxiliary import (
     maintenance_cleanup_job,
     maintenance_heavy_job,
     metadata_import_job
-    # maintenance_schedule,
-    # heavy_maintenance_schedule,
-    # metadata_import_schedule,
 )
 from src.schedules.etl_schedules import (
     production_schedule,
     services_schedule,
 )
+
+# ✅ IMPORT DES SENSORS
+from src.hooks.alerting_hooks import (
+    success_notification_sensor,
+    failure_notification_sensor,
+)
+
 from src.utils.logging import setup_logging
 
 
@@ -64,11 +68,11 @@ definitions = Definitions(
         full_etl_pipeline,
         
         # Pipelines partiels
-        ingestion_pipeline,        # SFTP → RAW → STAGING → ODS (sans dbt)
-        raw_pipeline,              # ✅ SFTP → RAW uniquement
-        ods_pipeline,              # STAGING → ODS
-        prep_pipeline,             # ODS → dbt PREP
-        services_pipeline,         # Services (devises, temps)
+        ingestion_pipeline,
+        raw_pipeline,
+        ods_pipeline,
+        prep_pipeline,
+        services_pipeline,
         
         # Recovery
         recovery_from_staging,
@@ -80,19 +84,15 @@ definitions = Definitions(
     ],
     
     schedules=[
-        # ETL
-        production_schedule,           # 30 * * * * (toutes les heures à :30)
-        services_schedule,             # 0 3 * * * (3h du matin)
-        
-        # Maintenance
-        # maintenance_schedule,          # 0 4 1 * * (1er du mois à 4h)
-        # heavy_maintenance_schedule,    # 0 3 1 */3 * (trimestriel)
-        
-        # Metadata
-        # metadata_import_schedule,      # 0 8 * * * (8h du matin)
+        production_schedule,
+        services_schedule,
     ],
     
-    sensors=[],  # Pas de sensors, 100% schedules
+    # ✅ AJOUTER SENSORS
+    sensors=[
+        success_notification_sensor,
+        failure_notification_sensor,
+    ],
     
     resources={
         "postgres": PostgresResource(dsn=settings.postgres_url),
