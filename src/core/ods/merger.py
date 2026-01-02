@@ -559,3 +559,34 @@ def merge_staging_to_ods(
             "closed_records": rows_closed,     # Lignes fermées (= updated)
             "deleted_records": rows_deleted,   # Soft deletes
         }
+    
+
+
+def scd2_decision(
+    *,
+    existing_hash: str | None,
+    incoming_hash: str,
+    is_current: bool = True,
+    is_deleted: bool = False,
+) -> str:
+    """
+    Décide l'action SCD2 à effectuer.
+
+    Returns:
+        "insert"  -> nouvelle PK ou nouvelle version
+        "close"   -> fermer la version courante
+        "noop"    -> aucun changement
+    """
+    if is_deleted:
+        return "insert"
+
+    if existing_hash is None:
+        return "insert"
+
+    if not is_current:
+        return "insert"
+
+    if existing_hash != incoming_hash:
+        return "close"
+
+    return "noop"

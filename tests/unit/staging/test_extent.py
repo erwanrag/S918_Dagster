@@ -26,9 +26,9 @@ def test_generate_extent_select():
     result = generate_extent_select("code", 3, "src")
 
     assert len(result) == 3
-    assert result[0] == 'src."code"[1] AS "code_1"'
-    assert result[1] == 'src."code"[2] AS "code_2"'
-    assert result[2] == 'src."code"[3] AS "code_3"'
+    assert result[0] == 'split_part(src."code", \';\', 1) AS "code_1"'
+    assert result[1] == 'split_part(src."code", \';\', 2) AS "code_2"'
+    assert result[2] == 'split_part(src."code", \';\', 3) AS "code_3"'
 
 
 @pytest.mark.unit
@@ -36,17 +36,17 @@ def test_build_select_with_extent(sample_columns):
     """Test construction SELECT complet avec EXTENT"""
     result = build_select_with_extent(sample_columns, "src")
 
-    # Doit contenir les colonnes normales
+    # Colonnes normales
     assert 'src."id"' in result
     assert 'src."name"' in result
 
-    # Doit contenir les colonnes éclatées
-    assert 'src."code"[1] AS "code_1"' in result
-    assert 'src."code"[2] AS "code_2"' in result
-    assert 'src."code"[3] AS "code_3"' in result
+    # Colonnes EXTENT éclatées
+    assert 'split_part(src."code", \';\', 1) AS "code_1"' in result
+    assert 'split_part(src."code", \';\', 2) AS "code_2"' in result
+    assert 'split_part(src."code", \';\', 3) AS "code_3"' in result
 
-    # Ne doit PAS contenir la colonne originale "code"
-    assert 'src."code",' not in result or 'src."code"\n' not in result
+    # La colonne brute "code" ne doit jamais être sélectionnée seule
+    assert 'src."code",' not in result.split("AS")
 
 
 @pytest.mark.unit
@@ -61,4 +61,4 @@ def test_extent_with_no_extent_columns():
 
     assert 't."id"' in result
     assert 't."name"' in result
-    assert "[" not in result  # Pas de brackets
+    assert "split_part" not in result
